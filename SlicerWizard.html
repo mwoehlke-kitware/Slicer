@@ -1,0 +1,1562 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. SlicerWizard Package &mdash; SlicerWizard 4.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '4.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="SlicerWizard 4.3 documentation" href="index.html" />
+    <link rel="prev" title="Welcome to SlicerWizard’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to SlicerWizard’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SlicerWizard 4.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="slicerwizard-package">
+<h1>1. SlicerWizard Package<a class="headerlink" href="#slicerwizard-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-SlicerWizard.CMakeParser">
+<span id="cmakeparser-module"></span><h2>1.1. <tt class="xref py py-mod docutils literal"><span class="pre">CMakeParser</span></tt> Module<a class="headerlink" href="#module-SlicerWizard.CMakeParser" title="Permalink to this headline">¶</a></h2>
+<p>Symbolic manipulation of CMake scripts.</p>
+<p>This module provides a set of classes to support symbolic parsing of CMake
+script. The use of symbolic parsing, as opposed to regular expressions, frees
+the user from needing to worry about syntactic context (is that really a
+function, or is it inside of a string or comment?) and provides a representation
+that is more suitable to direct manipulation.</p>
+<p>In addition to the several token classes provided, <a class="reference internal" href="#SlicerWizard.CMakeParser.CMakeScript" title="SlicerWizard.CMakeParser.CMakeScript"><tt class="xref py py-class docutils literal"><span class="pre">CMakeScript</span></tt></a>
+provides an interface for bidirectional translation between raw text and
+tokenized representations.</p>
+<p>Unlike other parsers, this module is not a &#8220;pretty formatter&#8221;, but rather is
+specifically designed to preserve the original formatting of a script in order
+to be able to perform convert losslessly from raw to parsed form and back,
+while still providing a parsed form that is easy to use and manipulate. Care
+should be used, however, when creating or manipulating scripts, as there are
+effectively no safeguards against producing a script that is syntactically
+invalid.</p>
+<dl class="class">
+<dt id="SlicerWizard.CMakeParser.CMakeScript">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.CMakeParser.</tt><tt class="descname">CMakeScript</tt><big>(</big><em>content</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/CMakeParser.html#CMakeScript"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.CMakeParser.CMakeScript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Tokenized representation of a CMake script.</p>
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.CMakeScript.tokens">
+<tt class="descname">tokens</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.CMakeScript.tokens" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of tokens which comprise the script. Manipulations of
+this list should be used to change the content of the script.</p>
+</dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Textual content of a CMake script.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.SyntaxError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">SyntaxError</span></tt></a> or <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EOFError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">EOFError</span></tt></a> if a
+parsing error occurs (i.e. if the input text is not syntactically valid).</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">fi</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;CMakeLists.txt&#39;</span><span class="p">):</span>
+  <span class="n">script</span> <span class="o">=</span> <span class="n">CMakeParser</span><span class="o">.</span><span class="n">CMakeScript</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="k">with</span> <span class="n">fo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;CMakeLists.txt.new&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">):</span>
+  <span class="n">fo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">script</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="SlicerWizard.CMakeParser.Command">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.CMakeParser.</tt><tt class="descname">Command</tt><big>(</big><em>text</em>, <em>arguments=</em><span class="optional">[</span><span class="optional">]</span>, <em>indent=''</em>, <em>prefix='('</em>, <em>suffix=')'</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/CMakeParser.html#Command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.CMakeParser.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#SlicerWizard.CMakeParser.Token" title="SlicerWizard.CMakeParser.Token"><tt class="xref py py-class docutils literal"><span class="pre">SlicerWizard.CMakeParser.Token</span></tt></a></p>
+<p>Command token.</p>
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Command.text">
+<tt class="descname">text</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Command.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the command.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Command.prefix">
+<tt class="descname">prefix</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Command.prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The delimiter which starts the command&#8217;s argument list. This shall end with
+<tt class="docutils literal"><span class="pre">'('</span></tt> and may begin with whitespace if there is whitespace separating the
+command name from the &#8216;(&#8216;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Command.suffix">
+<tt class="descname">suffix</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Command.suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The delimiter which ends the command&#8217;s argument list. This shall end with
+<tt class="docutils literal"><span class="pre">')'</span></tt> and may begin with whitespace if there is whitespace separating the
+last argument (or the opening &#8216;(&#8216; if there are no arguments) from the &#8216;)&#8217;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Command.arguments">
+<tt class="descname">arguments</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Command.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of <a class="reference internal" href="#SlicerWizard.CMakeParser.String" title="SlicerWizard.CMakeParser.String"><tt class="xref py py-class docutils literal"><span class="pre">String</span></tt></a> tokens which comprise the arguments of
+the command.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="SlicerWizard.CMakeParser.Comment">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.CMakeParser.</tt><tt class="descname">Comment</tt><big>(</big><em>prefix</em>, <em>text</em>, <em>indent=''</em>, <em>suffix=''</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/CMakeParser.html#Comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.CMakeParser.Comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#SlicerWizard.CMakeParser.Token" title="SlicerWizard.CMakeParser.Token"><tt class="xref py py-class docutils literal"><span class="pre">SlicerWizard.CMakeParser.Token</span></tt></a></p>
+<p>Comment token.</p>
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Comment.text">
+<tt class="descname">text</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Comment.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>The textual content of the comment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Comment.prefix">
+<tt class="descname">prefix</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Comment.prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The delimiter which starts this comment: <tt class="docutils literal"><span class="pre">'#'</span></tt>, optionally followed by a
+lua-style long bracket (e.g. <tt class="docutils literal"><span class="pre">'[['</span></tt>, <tt class="docutils literal"><span class="pre">'[===['</span></tt>, etc.).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Comment.suffix">
+<tt class="descname">suffix</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Comment.suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The delimiter which ends this comment: either empty, or a lua-style long
+bracket which shall match the long bracket in <a class="reference internal" href="#SlicerWizard.CMakeParser.Comment.prefix" title="SlicerWizard.CMakeParser.Comment.prefix"><tt class="xref py py-attr docutils literal"><span class="pre">prefix</span></tt></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="SlicerWizard.CMakeParser.String">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.CMakeParser.</tt><tt class="descname">String</tt><big>(</big><em>text</em>, <em>indent=''</em>, <em>prefix=''</em>, <em>suffix=''</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/CMakeParser.html#String"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.CMakeParser.String" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#SlicerWizard.CMakeParser.Token" title="SlicerWizard.CMakeParser.Token"><tt class="xref py py-class docutils literal"><span class="pre">SlicerWizard.CMakeParser.Token</span></tt></a></p>
+<p>String token.</p>
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.String.text">
+<tt class="descname">text</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.String.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>The textual content of the string. Note that escapes are not evaluated and
+will appear in their raw (escaped) form.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.String.prefix">
+<tt class="descname">prefix</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.String.prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The delimiter which starts this string. The delimiter may be empty,
+<tt class="docutils literal"><span class="pre">'&quot;'</span></tt>, or a lua-style long bracket (e.g. <tt class="docutils literal"><span class="pre">'[['</span></tt>, <tt class="docutils literal"><span class="pre">'[===['</span></tt>, etc.).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.String.suffix">
+<tt class="descname">suffix</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.String.suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The delimiter which ends this string, which shall match the <a class="reference internal" href="#SlicerWizard.CMakeParser.String.prefix" title="SlicerWizard.CMakeParser.String.prefix"><tt class="xref py py-attr docutils literal"><span class="pre">prefix</span></tt></a>.</p>
+</dd></dl>
+
+<p>String tokens appear as arguments to <a class="reference internal" href="#SlicerWizard.CMakeParser.Command" title="SlicerWizard.CMakeParser.Command"><tt class="xref py py-class docutils literal"><span class="pre">Command</span></tt></a>, as they are not valid
+outside of a command context.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="SlicerWizard.CMakeParser.Token">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.CMakeParser.</tt><tt class="descname">Token</tt><big>(</big><em>text</em>, <em>indent=''</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/CMakeParser.html#Token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.CMakeParser.Token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Base class for CMake script tokens.</p>
+<p>This is the base class for CMake script tokens. An occurrence of a token
+whose type is exactly <a class="reference internal" href="#SlicerWizard.CMakeParser.Token" title="SlicerWizard.CMakeParser.Token"><tt class="xref py py-class docutils literal"><span class="pre">Token</span></tt></a> (i.e. not a subclass thereof) is a
+syntactic error unless the token text is empty.</p>
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Token.text">
+<tt class="descname">text</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Token.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>The textual content of the token.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.CMakeParser.Token.indent">
+<tt class="descname">indent</tt><a class="headerlink" href="#SlicerWizard.CMakeParser.Token.indent" title="Permalink to this definition">¶</a></dt>
+<dd><p>The whitespace (including newlines) which preceded the token. As the parser
+is strictly preserving of whitespace, note that this must be non-empty in
+many cases in order to produce a syntactically correct script.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="extensiondescription-object">
+<h2>1.2. <tt class="xref py py-class docutils literal"><span class="pre">ExtensionDescription</span></tt> Object<a class="headerlink" href="#extensiondescription-object" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SlicerWizard.ExtensionDescription">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.</tt><tt class="descname">ExtensionDescription</tt><big>(</big><em>repo=None</em>, <em>filepath=None</em>, <em>sourcedir=None</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionDescription" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Representation of an extension description.</p>
+<p>This class provides a Python object representation of an extension
+description. The extension information is made available as attributes on the
+object. The &#8220;well known&#8221; attributes are described
+<a class="reference external" href="http://wiki.slicer.org/slicerWiki/index.php/Documentation/Nightly/Developers/Extensions/DescriptionFile">here</a>. Custom attributes may
+be added with <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#setattr" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">setattr()</span></tt></a>. Attributes may be removed with <a class="reference external" href="http://docs.python.org/2.7/library/functions.html#delattr" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">delattr()</span></tt></a>
+or the <a class="reference internal" href="#SlicerWizard.ExtensionDescription.clear" title="SlicerWizard.ExtensionDescription.clear"><tt class="xref py py-meth docutils literal"><span class="pre">clear()</span></tt></a> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>repo</strong> (<a class="reference external" href="http://pythonhosted.org/GitPython/0.3.2/reference.html#git.repo.base.Repo" title="(in GitPython v0.3.2 RC1)"><tt class="xref py py-class docutils literal"><span class="pre">git.Repo</span></tt></a>,
+<a class="reference internal" href="#SlicerWizard.Subversion.Repository" title="SlicerWizard.Subversion.Repository"><tt class="xref py py-class docutils literal"><span class="pre">Subversion.Repository</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt>.) &#8211; Extension repository from which to create the description.</li>
+<li><strong>filepath</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>.) &#8211; Path to an existing <tt class="docutils literal"><span class="pre">.s4ext</span></tt> to read.</li>
+<li><strong>sourcedir</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>.) &#8211; Path to an extension source directory.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.KeyError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt></a> if the extension description is missing a
+required attribute.</li>
+<li><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">Exception</span></tt></a> if there is some other problem
+constructing the description.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The description may be created from a repository instance (in which case
+the description repository information will be populated), a path to the
+extension source directory, or a path to an existing <tt class="docutils literal"><span class="pre">.s4ext</span></tt> file.
+No more than one of <tt class="docutils literal"><span class="pre">repo</span></tt>, <tt class="docutils literal"><span class="pre">filepath</span></tt> or <tt class="docutils literal"><span class="pre">sourcedir</span></tt> may be given.
+If none are provided, the description will be incomplete.</p>
+<dl class="method">
+<dt id="SlicerWizard.ExtensionDescription.clear">
+<tt class="descname">clear</tt><big>(</big><em>attr=None</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionDescription.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove attributes from the extension description.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attr</strong> (<tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Name of attribute to remove.</td>
+</tr>
+</tbody>
+</table>
+<p>If <tt class="docutils literal"><span class="pre">attr</span></tt> is not <tt class="docutils literal"><span class="pre">None</span></tt>, this removes the specified attribute from the
+description object, equivalent to calling <tt class="docutils literal"><span class="pre">delattr(instance,</span> <span class="pre">attr)</span></tt>. If
+<tt class="docutils literal"><span class="pre">attr</span></tt> is <tt class="docutils literal"><span class="pre">None</span></tt>, all attributes are removed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionDescription.read">
+<tt class="descname">read</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionDescription.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read extension description from directory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Directory containing extension description.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.IOError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">IOError</span></tt></a> if <tt class="docutils literal"><span class="pre">path</span></tt> does not contain exactly one
+extension description file.</td>
+</tr>
+</tbody>
+</table>
+<p>This attempts to read an extension description from the specified <tt class="docutils literal"><span class="pre">path</span></tt>
+which contains a single extension description (<tt class="docutils literal"><span class="pre">.s4ext</span></tt>) file (usually an
+extension build directory).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionDescription.write">
+<tt class="descname">write</tt><big>(</big><em>out</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionDescription.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write extension description to a file or stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/io.html#io.IOBase" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">IOBase</span></tt></a> or <tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Stream or path to which to write the description.</td>
+</tr>
+</tbody>
+</table>
+<p>This writes the extension description to the specified file path or stream
+object. This is suitable for producing a <tt class="docutils literal"><span class="pre">.s4ext</span></tt> file from a description
+object.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="extensionproject-object">
+<h2>1.3. <tt class="xref py py-class docutils literal"><span class="pre">ExtensionProject</span></tt> Object<a class="headerlink" href="#extensionproject-object" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SlicerWizard.ExtensionProject">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.</tt><tt class="descname">ExtensionProject</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Convenience class for manipulating an extension project.</p>
+<p>This class provides an additional layer of convenience for users that wish to
+manipulate the CMakeLists.txt of an extension project. The term &#8220;build
+script&#8221; is used throughout to refer to the CMakeLists.txt so encapsulated.</p>
+<p>Modifications to the script are made to the in-memory, parsed representation.
+Use <a class="reference internal" href="#SlicerWizard.ExtensionProject.save" title="SlicerWizard.ExtensionProject.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> to write changes back to disk.</p>
+<p>This class may be used as a context manager. When used in this manner, any
+changes made are automatically written back to the project&#8217;s CMakeLists.txt
+when the context goes out of scope.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Top level directory of the extension project.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="SlicerWizard.ExtensionProject.addModule">
+<tt class="descname">addModule</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionProject.addModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a module to the build rules of the project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name of the module to be added.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.EOFError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">EOFError</span></tt></a> if no insertion point can be found.</td>
+</tr>
+</tbody>
+</table>
+<p>This adds an <tt class="docutils literal"><span class="pre">add_subdirectory()</span></tt> call for <tt class="docutils literal"><span class="pre">name</span></tt> to the build script.
+If possible, the new call is inserted immediately before a placeholder
+comment which is designated for this purpose. Otherwise, the new call is
+inserted after the last existing call to <tt class="docutils literal"><span class="pre">add_subdirectory()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionProject.getValue">
+<tt class="descname">getValue</tt><big>(</big><em>name</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionProject.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get value of CMake variable set in project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name of the variable.</li>
+<li><strong>default</strong> &#8211; Value to return if no such variable exists.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Value of the variable, or <tt class="docutils literal"><span class="pre">default</span></tt> if not set.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> or <tt class="docutils literal"><span class="pre">type(default)</span></tt></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.KeyError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt></a> if no such <tt class="docutils literal"><span class="pre">name</span></tt> is set and <tt class="docutils literal"><span class="pre">default</span></tt> is
+<tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This returns the raw value of the variable <tt class="docutils literal"><span class="pre">name</span></tt> which is set in the
+build script. No substitution is performed (the result may contain
+substitution placeholders like &#8216;<tt class="docutils literal"><span class="pre">${var}</span></tt>&#8216;). If more than one <tt class="docutils literal"><span class="pre">set()</span></tt>
+command sets the same <tt class="docutils literal"><span class="pre">name</span></tt>, the result is the raw argument to the last
+such command. If the value consists of more than one argument, only the
+first is returned.</p>
+<p>If no <tt class="docutils literal"><span class="pre">set()</span></tt> command sets <tt class="docutils literal"><span class="pre">name</span></tt>, and <tt class="docutils literal"><span class="pre">default</span></tt> is not <tt class="docutils literal"><span class="pre">None</span></tt>,
+<tt class="docutils literal"><span class="pre">default</span></tt> is returned. Otherwise a <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.KeyError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt></a> is raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionProject.save">
+<tt class="descname">save</tt><big>(</big><em>destination=None</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionProject.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>destination</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Location to which to write the build script.</td>
+</tr>
+</tbody>
+</table>
+<p>This saves the extension project CMake script to the specified file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Open a project</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">ExtensionProject</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)</span>
+
+<span class="c"># Set a value in the project</span>
+<span class="n">p</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="s">&#39;EXTENSION_DESCRIPTION&#39;</span><span class="p">,</span> <span class="s">&#39;This is an awesome extension!&#39;</span><span class="p">)</span>
+
+<span class="c"># Save the changes</span>
+<span class="n">p</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If <tt class="docutils literal"><span class="pre">destination</span></tt> is <tt class="docutils literal"><span class="pre">None</span></tt>, the CMakeLists.txt file from which the
+project instance was created is overwritten.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionProject.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionProject.setValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change value of CMake variable set in project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name of the variable.</li>
+<li><strong>value</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Value to assign to the variable.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.KeyError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt></a> if no such <tt class="docutils literal"><span class="pre">name</span></tt> is set.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This modifies the build script to set the variable <tt class="docutils literal"><span class="pre">name</span></tt> to <tt class="docutils literal"><span class="pre">value</span></tt>.
+If more than one <tt class="docutils literal"><span class="pre">set()</span></tt> command sets the same <tt class="docutils literal"><span class="pre">name</span></tt>, only the first
+is modified. If the value of the modified <tt class="docutils literal"><span class="pre">set()</span></tt> command has more than
+one argument, only the first is modified.</p>
+<p>The build script must already contain a <tt class="docutils literal"><span class="pre">set()</span></tt> command which sets
+<tt class="docutils literal"><span class="pre">name</span></tt>. If it does not, a <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.KeyError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt></a> is raised.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.ExtensionProject.project">
+<tt class="descname">project</tt><a class="headerlink" href="#SlicerWizard.ExtensionProject.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of extension project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type :</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p>This provides the name of the extension project, i.e. the identifier passed
+to <tt class="docutils literal"><span class="pre">project()</span></tt> in the extension&#8217;s build script.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="extensionwizard-object">
+<h2>1.4. <tt class="xref py py-class docutils literal"><span class="pre">ExtensionWizard</span></tt> Object<a class="headerlink" href="#extensionwizard-object" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SlicerWizard.ExtensionWizard">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.</tt><tt class="descname">ExtensionWizard</tt><a class="headerlink" href="#SlicerWizard.ExtensionWizard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Implementation class for the Extension Wizard.</p>
+<p>This class provides the entry point and implementation of the Extension
+wizard. One normally uses it by writing a small bootstrap script to load the
+module, which then calls code like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">wizard</span> <span class="o">=</span> <span class="n">ExtensionWizard</span><span class="p">()</span>
+<span class="n">wizard</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Interaction with <a class="reference external" href="http://github.com">GitHub</a> uses
+<a class="reference internal" href="#SlicerWizard.GithubHelper.logIn" title="SlicerWizard.GithubHelper.logIn"><tt class="xref py py-func docutils literal"><span class="pre">GithubHelper.logIn()</span></tt></a> to authenticate.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Most methods will signal the application to exit if             something goes wrong. This behavior is hidden by the             <tt class="xref py py-meth docutils literal"><span class="pre">execute()</span></tt> method when  passing             <tt class="docutils literal"><span class="pre">exit=False</span></tt>; callers that need to continue execution after             calling one of the other methods directly should catch             <a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.SystemExit" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">SystemExit</span></tt></a>.</p>
+</div>
+<dl class="method">
+<dt id="SlicerWizard.ExtensionWizard.addModule">
+<tt class="descname">addModule</tt><big>(</big><em>args</em>, <em>kind</em>, <em>name</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionWizard.addModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a module to an existing extension.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args.destination</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Location (directory) of the extension to modify.</li>
+<li><strong>kind</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Identifier of the template from which to create the module.</li>
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name for the new module.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This creates a new module from the specified module template and adds it to
+the CMakeLists.txt of the extension. The <tt class="docutils literal"><span class="pre">name</span></tt> is used both as the name
+of the new module subdirectory (created in <tt class="docutils literal"><span class="pre">args.destination</span></tt>) and as the
+replacement value when substituting the template key.</p>
+<p>If an error occurs, the extension is not modified, and the application
+displays an error message and then exits.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.ExtensionProject.addModule" title="SlicerWizard.ExtensionProject.addModule"><tt class="xref py py-meth docutils literal"><span class="pre">ExtensionProject.addModule()</span></tt></a>,
+<a class="reference internal" href="#SlicerWizard.TemplateManager.copyTemplate" title="SlicerWizard.TemplateManager.copyTemplate"><tt class="xref py py-meth docutils literal"><span class="pre">TemplateManager.copyTemplate()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionWizard.contribute">
+<tt class="descname">contribute</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionWizard.contribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add or update an extension to/in the index repository.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args.destination</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Location (directory) of the extension to contribute.</li>
+<li><strong>args.target</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name of branch which the extension targets (must match a branch name in
+the extension index repository).</li>
+<li><strong>args.index</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Path to an existing clone of the extension index, or path to which the
+index should be cloned. If <tt class="docutils literal"><span class="pre">None</span></tt>, a subdirectory in the extension&#8217;s
+<tt class="docutils literal"><span class="pre">.git</span></tt> directory is used.</li>
+<li><strong>args.test</strong> (<tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt>) &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt>, include a note in the pull request that the request is a
+test and should not be merged.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This writes the description of the specified extension &#8212; which may be an
+addition, or an update to a previously contributed extension &#8212; to a user
+fork of the <a class="reference external" href="http://github.com/Slicer/ExtensionsIndex">extension index repository</a>, pushes the changes, and creates
+a pull request to merge the contribution. In case of an update to an
+extension with a github public repository, a &#8220;compare URL&#8221; (a github link
+to view the changes between the previously contributed version of the
+extension and the version being newly contributed) is included in the pull
+request message.</p>
+<p>This attempts to find the user&#8217;s already existing fork of the index
+repository, and to create one if it does not already exist. The fork is
+then either cloned (adding remotes for both upstream and the user&#8217;s fork)
+or updated, and the current upstream target branch pushed to the user&#8217;s
+fork, ensuring that the target branch in the user&#8217;s fork is up to date. The
+changes to the index repository are made in a separate branch.</p>
+<p>If a pull request for the extension already exists, its message is updated
+and the corresponding branch is force-pushed (which automatically updates
+the code portion of the request).</p>
+<p>If anything goes wrong, no pull request is created, and the application
+displays a suitable error message and then exits. Additionally, a branch
+push for the index changes only occurs if the failed operation is the
+creation or update of the pull request; other errors cause the application
+to exit before pushing the branch. (Updates of the user&#8217;s fork to current
+upstream may still occur.)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionWizard.create">
+<tt class="descname">create</tt><big>(</big><em>args</em>, <em>name</em>, <em>kind='default'</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionWizard.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new extension from specified extension template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args.destination</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Directory wherein the new extension is created.</li>
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name for the new extension.</li>
+<li><strong>kind</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Identifier of the template from which to create the extension.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that the extension is written to a <em>new subdirectory</em> which is created
+in <tt class="docutils literal"><span class="pre">args.destination</span></tt>. The <tt class="docutils literal"><span class="pre">name</span></tt> is used both as the name of this
+directory, and as the replacement value when substituting the template key.</p>
+<p>If an error occurs, the application displays an error message and exits.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.TemplateManager.copyTemplate" title="SlicerWizard.TemplateManager.copyTemplate"><tt class="xref py py-meth docutils literal"><span class="pre">TemplateManager.copyTemplate()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionWizard.describe">
+<tt class="descname">describe</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionWizard.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate extension description and write it to <tt class="xref py py-attr docutils literal"><span class="pre">sys.stdout</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args.destination</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Location (directory) of the extension to describe.</td>
+</tr>
+</tbody>
+</table>
+<p>If something goes wrong, the application displays a suitable error message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionWizard.execute">
+<tt class="descname">execute</tt><big>(</big><em>*args</em>, <em>exit=True</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionWizard.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the wizard in <abbr title="Command Line Interface">CLI</abbr> mode.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>exit</strong> (<tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt>) &#8211; <ul>
+<li><tt class="docutils literal"><span class="pre">True</span></tt>: The call does not return and the application exits.</li>
+<li><tt class="docutils literal"><span class="pre">False</span></tt>: The call returns an exit code, which is <tt class="docutils literal"><span class="pre">0</span></tt> if execution
+was successful, or non-zero otherwise.</li>
+</ul>
+</li>
+<li><strong>args</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/collections.html#collections.Sequence" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Sequence</span></tt></a>) &#8211; <abbr title="Command Line Interface">CLI</abbr> arguments to use for execution.</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) &#8211; Named <abbr title="Command Line Interface">CLI</abbr> options to use for execution.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This sets up <abbr title="Command Line Interface">CLI</abbr> argument parsing and executes the wizard, using the
+provided <abbr title="Command Line Interface">CLI</abbr> arguments if any, or <tt class="xref py py-attr docutils literal"><span class="pre">sys.argv</span></tt> otherwise. See
+<a class="reference internal" href="#SlicerWizard.Utilities.buildProcessArgs" title="SlicerWizard.Utilities.buildProcessArgs"><tt class="xref py py-func docutils literal"><span class="pre">buildProcessArgs()</span></tt></a> for an explanation of how <tt class="docutils literal"><span class="pre">args</span></tt> and <tt class="docutils literal"><span class="pre">kwargs</span></tt>
+are processed.</p>
+<p>If multiple commands are given, an error in one may cause others to be
+skipped.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.Utilities.buildProcessArgs" title="SlicerWizard.Utilities.buildProcessArgs"><tt class="xref py py-func docutils literal"><span class="pre">buildProcessArgs()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.ExtensionWizard.publish">
+<tt class="descname">publish</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#SlicerWizard.ExtensionWizard.publish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Publish extension to github repository.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args.destination</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Location (directory) of the extension to publish.</td>
+</tr>
+</tbody>
+</table>
+<p>This creates a public github repository for an extension (whose name is the
+extension name), adds it as a remote of the extension&#8217;s local repository,
+and pushes the extension to the new github repository. The extension
+information (homepage, icon url) is also updated to refer to the new public
+repository.</p>
+<p>If the extension is not already tracked in a local git repository, a new
+local git repository is also created and populated by the files currently
+in the extension source directory.</p>
+<p>If the local repository is dirty or already has a remote, or a github
+repository with the name of the extension already exists, the application
+displays a suitable error message and then exits.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-SlicerWizard.GithubHelper">
+<span id="githubhelper-module"></span><h2>1.5. <tt class="xref py py-mod docutils literal"><span class="pre">GithubHelper</span></tt> Module<a class="headerlink" href="#module-SlicerWizard.GithubHelper" title="Permalink to this headline">¶</a></h2>
+<p>Helpers for interacting with github.</p>
+<dl class="function">
+<dt id="SlicerWizard.GithubHelper.logIn">
+<tt class="descclassname">SlicerWizard.GithubHelper.</tt><tt class="descname">logIn</tt><big>(</big><em>repo=None</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/GithubHelper.html#logIn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.GithubHelper.logIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create github session.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>repo</strong> (<a class="reference external" href="http://pythonhosted.org/GitPython/0.3.2/reference.html#git.repo.base.Repo" title="(in GitPython v0.3.2 RC1)"><tt class="xref py py-class docutils literal"><span class="pre">git.Repo</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt>.) &#8211; If not <tt class="docutils literal"><span class="pre">None</span></tt>, use the git client (i.e. configuration) from the specified
+git repository; otherwise use a default client.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A logged in github session.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="http://jacquev6.github.io/PyGithub/github.html#github.MainClass.Github" title="(in PyGithub v1.23.0)"><tt class="xref py py-class docutils literal"><span class="pre">github.Github</span></tt></a>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">github.GithubException.BadCredentialsException</span></tt> if
+authentication fails.</td>
+</tr>
+</tbody>
+</table>
+<p>This obtains and returns a logged in github session using the user&#8217;s
+credentials, as managed by <a class="reference external" href="http://git-scm.com/docs/gitcredentials.html">git-credentials</a>; login information is obtained
+as necessary via the same. On success, the credentials are also saved to any
+store that the user has configured.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.GithubHelper.getRepo">
+<tt class="descclassname">SlicerWizard.GithubHelper.</tt><tt class="descname">getRepo</tt><big>(</big><em>session</em>, <em>name=None</em>, <em>url=None</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/GithubHelper.html#getRepo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.GithubHelper.getRepo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a github repository by name or URL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>session</strong> (<a class="reference external" href="http://jacquev6.github.io/PyGithub/github.html#github.MainClass.Github" title="(in PyGithub v1.23.0)"><tt class="xref py py-class docutils literal"><span class="pre">github.Github</span></tt></a> or
+<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/AuthenticatedUser.html#github.AuthenticatedUser.AuthenticatedUser" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.AuthenticatedUser.AuthenticatedUser</span></tt></a>) &#8211; A github session object, e.g. as returned from <a class="reference internal" href="#SlicerWizard.GithubHelper.logIn" title="SlicerWizard.GithubHelper.logIn"><tt class="xref py py-func docutils literal"><span class="pre">logIn()</span></tt></a>.</li>
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Name of the repository to look up.</li>
+<li><strong>url</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Clone URL of the repository.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Matching repository, or <tt class="docutils literal"><span class="pre">None</span></tt> if no such repository was found.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/Repository.html#github.Repository.Repository" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.Repository.Repository</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function attempts to look up a github repository by either its qualified
+github name (i.e. &#8216;<em>&lt;owner&gt;</em>/<em>&lt;repository&gt;</em>&#8216;) or a clone URL:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Create session</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">logIn</span><span class="p">()</span>
+
+<span class="c"># Look up repository by name</span>
+<span class="n">repoA</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">getRepo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s">&#39;octocat/Hello-World&#39;</span><span class="p">)</span>
+
+<span class="c"># Look up repository by clone URL</span>
+<span class="n">cloneUrl</span> <span class="o">=</span> <span class="s">&#39;https://github.com/octocat/Hello-World.git&#39;</span>
+<span class="n">repoB</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">getRepo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">cloneUrl</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If both <tt class="docutils literal"><span class="pre">name</span></tt> and <tt class="docutils literal"><span class="pre">url</span></tt> are provided, only <tt class="docutils literal"><span class="pre">name</span></tt> is used. The <tt class="docutils literal"><span class="pre">url</span></tt>
+must have &#8220;github.com&#8221; as the host.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.GithubHelper.getFork">
+<tt class="descclassname">SlicerWizard.GithubHelper.</tt><tt class="descname">getFork</tt><big>(</big><em>user</em>, <em>upstream</em>, <em>create=False</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/GithubHelper.html#getFork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.GithubHelper.getFork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get user&#8217;s fork of the specified repository.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/NamedUser.html#github.NamedUser.NamedUser" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.NamedUser.NamedUser</span></tt></a>,
+<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/AuthenticatedUser.html#github.AuthenticatedUser.AuthenticatedUser" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.AuthenticatedUser.AuthenticatedUser</span></tt></a> or
+<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/Organization.html#github.Organization.Organization" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.Organization.Organization</span></tt></a>) &#8211; Github user or organization which owns the requested fork.</li>
+<li><strong>upstream</strong> (<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/Repository.html#github.Repository.Repository" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.Repository.Repository</span></tt></a>) &#8211; Upstream repository of the requested fork.</li>
+<li><strong>create</strong> (<tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt>) &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt>, create the forked repository if no such fork exists.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The specified fork repository, or <tt class="docutils literal"><span class="pre">None</span></tt> if no such fork exists and
+<tt class="docutils literal"><span class="pre">create</span></tt> is <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/Repository.html#github.Repository.Repository" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.Repository.Repository</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">github.GithubException.GithubException</span></tt> if <tt class="docutils literal"><span class="pre">user</span></tt> does not
+have permission to create a repository.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function attempts to look up a repository owned by the specified user or
+organization which is a fork of the specified upstream repository, optionally
+creating one if it does not exist:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Create session</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">logIn</span><span class="p">()</span>
+
+<span class="c"># Get user</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="s">&quot;jdoe&quot;</span><span class="p">)</span>
+
+<span class="c"># Get upstream repository</span>
+<span class="n">upstream</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">getRepo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s">&#39;octocat/Spoon-Knife&#39;</span><span class="p">)</span>
+
+<span class="c"># Look up fork</span>
+<span class="n">fork</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">getFork</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">upstream</span><span class="o">=</span><span class="n">upstream</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.GithubHelper.getPullRequest">
+<tt class="descclassname">SlicerWizard.GithubHelper.</tt><tt class="descname">getPullRequest</tt><big>(</big><em>upstream</em>, <em>ref</em>, <em>user=None</em>, <em>fork=None</em>, <em>target=None</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/GithubHelper.html#getPullRequest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.GithubHelper.getPullRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get pull request for the specified user&#8217;s fork and ref.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>upstream</strong> (<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/Repository.html#github.Repository.Repository" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.Repository.Repository</span></tt></a>) &#8211; Upstream (target) repository of the requested pull request.</li>
+<li><strong>user</strong> (<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/NamedUser.html#github.NamedUser.NamedUser" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.NamedUser.NamedUser</span></tt></a>,
+<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/AuthenticatedUser.html#github.AuthenticatedUser.AuthenticatedUser" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.AuthenticatedUser.AuthenticatedUser</span></tt></a>,
+<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/Organization.html#github.Organization.Organization" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.Organization.Organization</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Github user or organization which owns the requested pull request.</li>
+<li><strong>ref</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Branch name or git ref of the requested pull request.</li>
+<li><strong>fork</strong> (<a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/Repository.html#github.Repository.Repository" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.Repository.Repository</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Downstream (fork) repository of the requested pull request.</li>
+<li><strong>target</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Branch name or git ref of the requested pull request target.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The specified pull request, or <tt class="docutils literal"><span class="pre">None</span></tt> if no such pull request exists.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://jacquev6.github.io/PyGithub/github_objects/PullRequest.html#github.PullRequest.PullRequest" title="(in PyGithub v1.23.0)"><tt class="docutils literal"><span class="pre">github.PullRequest.PullRequest</span></tt></a> or <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function attempts to look up the pull request made by <tt class="docutils literal"><span class="pre">user</span></tt> for
+<tt class="docutils literal"><span class="pre">upstream</span></tt> to integrate the user&#8217;s <tt class="docutils literal"><span class="pre">ref</span></tt> into upstream&#8217;s <tt class="docutils literal"><span class="pre">target</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Create session</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">logIn</span><span class="p">()</span>
+
+<span class="c"># Get user and upstream repository</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="s">&quot;jdoe&quot;</span><span class="p">)</span>
+<span class="n">repo</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">getRepo</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="s">&#39;octocat/Hello-World&#39;</span><span class="p">)</span>
+
+<span class="c"># Look up request to merge &#39;my-branch&#39; of any fork into &#39;master&#39;</span>
+<span class="n">pr</span> <span class="o">=</span> <span class="n">GithubHelper</span><span class="o">.</span><span class="n">getPullRequest</span><span class="p">(</span><span class="n">upstream</span><span class="o">=</span><span class="n">repo</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
+                                 <span class="n">ref</span><span class="o">=</span><span class="s">&#39;my-branch&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s">&#39;master&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If any of <tt class="docutils literal"><span class="pre">user</span></tt>, <tt class="docutils literal"><span class="pre">fork</span></tt> or <tt class="docutils literal"><span class="pre">target</span></tt> are <tt class="docutils literal"><span class="pre">None</span></tt>, those criteria are
+not considered when searching for a matching pull request. If multiple
+matching requests exist, the first matching request is returned.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-SlicerWizard.Subversion">
+<span id="subversion-module"></span><h2>1.6. <tt class="xref py py-mod docutils literal"><span class="pre">Subversion</span></tt> Module<a class="headerlink" href="#module-SlicerWizard.Subversion" title="Permalink to this headline">¶</a></h2>
+<p>Helpers for interacting with git.</p>
+<dl class="class">
+<dt id="SlicerWizard.Subversion.Client">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.Subversion.</tt><tt class="descname">Client</tt><big>(</big><em>repo=None</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Subversion.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Subversion.Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Wrapper for executing the <tt class="docutils literal"><span class="pre">svn</span></tt> process.</p>
+<p>This class provides a convenience wrapping for invoking the <tt class="docutils literal"><span class="pre">svn</span></tt> process.
+In addition to the <a class="reference internal" href="#SlicerWizard.Subversion.Client.execute" title="SlicerWizard.Subversion.Client.execute"><tt class="xref py py-meth docutils literal"><span class="pre">execute()</span></tt></a> method, names of subversion
+commands are implicitly available as methods:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">c</span> <span class="o">=</span> <span class="n">Subversion</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+<span class="n">c</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="SlicerWizard.Subversion.Client.execute">
+<tt class="descname">execute</tt><big>(</big><em>command</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Subversion.html#Client.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Subversion.Client.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute <tt class="docutils literal"><span class="pre">command</span></tt> and return line-split output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/collections.html#collections.Sequence" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Sequence</span></tt></a>) &#8211; Subversion command to execute.</li>
+<li><strong>args</strong> &#8211; Arguments to pass to <tt class="docutils literal"><span class="pre">command</span></tt>.</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) &#8211; Named options to pass to <tt class="docutils literal"><span class="pre">command</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Standard output from running the command, as a list (split by line).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">CommandError</span></tt> if the command exits with non-zero status.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This executes the specified <tt class="docutils literal"><span class="pre">svn</span></tt> command and returns the standard output
+from the execution. See <a class="reference internal" href="#SlicerWizard.Utilities.buildProcessArgs" title="SlicerWizard.Utilities.buildProcessArgs"><tt class="xref py py-func docutils literal"><span class="pre">buildProcessArgs()</span></tt></a> for an explanation of how
+<tt class="docutils literal"><span class="pre">args</span></tt> and <tt class="docutils literal"><span class="pre">kwargs</span></tt> are processed.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.Utilities.buildProcessArgs" title="SlicerWizard.Utilities.buildProcessArgs"><tt class="xref py py-func docutils literal"><span class="pre">buildProcessArgs()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.Subversion.Client.info">
+<tt class="descname">info</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Subversion.html#Client.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Subversion.Client.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return information about the specified item.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/collections.html#collections.Sequence" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Sequence</span></tt></a>) &#8211; Arguments to pass to <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">info</span></tt>.</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) &#8211; Named options to pass to <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">info</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Mapping of information fields returned by <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">info</span></tt>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a> of <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> → <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">CommandError</span></tt> if the command exits with non-zero status.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This wraps the <tt class="docutils literal"><span class="pre">svn</span> <span class="pre">info</span></tt> command, returning the resulting information as
+a <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>. The dictionary keys are the value names as printed by
+<tt class="docutils literal"><span class="pre">svn</span> <span class="pre">info</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="SlicerWizard.Subversion.Repository">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.Subversion.</tt><tt class="descname">Repository</tt><big>(</big><em>path='/usr/local/build/matthew/work/slicer/Slicer-build/share/doc/Slicer-4.3/SlicerWizard'</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Subversion.html#Repository"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Subversion.Repository" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Abstract representation of a subversion repository.</p>
+<dl class="attribute">
+<dt id="SlicerWizard.Subversion.Repository.url">
+<tt class="descname">url</tt><a class="headerlink" href="#SlicerWizard.Subversion.Repository.url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The remote URL of the base of the working copy checkout.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.Subversion.Repository.root_url">
+<tt class="descname">root_url</tt><a class="headerlink" href="#SlicerWizard.Subversion.Repository.root_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>The root URL of the remote repository.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.Subversion.Repository.uuid">
+<tt class="descname">uuid</tt><a class="headerlink" href="#SlicerWizard.Subversion.Repository.uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>The universally unique identifier of the repository.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.Subversion.Repository.wc_root">
+<tt class="descname">wc_root</tt><a class="headerlink" href="#SlicerWizard.Subversion.Repository.wc_root" title="Permalink to this definition">¶</a></dt>
+<dd><p>The absolute path to the top level directory of the repository working copy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.Subversion.Repository.revision">
+<tt class="descname">revision</tt><a class="headerlink" href="#SlicerWizard.Subversion.Repository.revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>The revision at which the working copy is checked out.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.Subversion.Repository.last_change_revision">
+<tt class="descname">last_change_revision</tt><a class="headerlink" href="#SlicerWizard.Subversion.Repository.last_change_revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>The last revision which contains a change to content contained in the
+working copy.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.Subversion.Repository.svn_dir">
+<tt class="descname">svn_dir</tt><a class="headerlink" href="#SlicerWizard.Subversion.Repository.svn_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>The absolute path to the working copy <tt class="docutils literal"><span class="pre">.svn</span></tt> directory.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="SlicerWizard.Subversion.Repository.client">
+<tt class="descname">client</tt><a class="headerlink" href="#SlicerWizard.Subversion.Repository.client" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#SlicerWizard.Subversion.Client" title="SlicerWizard.Subversion.Client"><tt class="xref py py-class docutils literal"><span class="pre">Client</span></tt></a> object which may be used to interact with the repository.
+The client interprets non-absolute paths as relative to the working copy
+root.</p>
+</dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Location of the repository checkout.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><ul class="first last simple">
+<li><tt class="xref py py-exc docutils literal"><span class="pre">CommandError</span></tt> if the request to get the repository information
+fails (e.g. if <tt class="docutils literal"><span class="pre">path</span></tt> is not a repository).</li>
+<li><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.KeyError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt></a> if the repository information is missing a
+required value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="templatemanager-object">
+<h2>1.7. <tt class="xref py py-class docutils literal"><span class="pre">TemplateManager</span></tt> Object<a class="headerlink" href="#templatemanager-object" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SlicerWizard.TemplateManager">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.</tt><tt class="descname">TemplateManager</tt><a class="headerlink" href="#SlicerWizard.TemplateManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Template collection manager.</p>
+<p>This class provides a template collection and operations for managing and
+using that collection.</p>
+<dl class="method">
+<dt id="SlicerWizard.TemplateManager.addArguments">
+<tt class="descname">addArguments</tt><big>(</big><em>parser</em><big>)</big><a class="headerlink" href="#SlicerWizard.TemplateManager.addArguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add template manager <abbr title="Command Line Interface">CLI</abbr> arguments to parser.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parser</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/argparse.html#argparse.ArgumentParser" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">argparse.ArgumentParser</span></tt></a>) &#8211; Argument parser instance to which to add arguments.</td>
+</tr>
+</tbody>
+</table>
+<p>This adds <abbr title="Command Line Interface">CLI</abbr> arguments to the specified <tt class="docutils literal"><span class="pre">parser</span></tt> that may be used to
+interact with the template collection.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The arguments use <tt class="docutils literal"><span class="pre">'&lt;'</span></tt> and <tt class="docutils literal"><span class="pre">'&gt;'</span></tt> to annotate optional               values. It is recommended to use <a class="reference internal" href="#SlicerWizard.WizardHelpFormatter" title="SlicerWizard.WizardHelpFormatter"><tt class="xref py py-class docutils literal"><span class="pre">WizardHelpFormatter</span></tt></a>               with the parser so that these will be displayed using the               conventional <tt class="docutils literal"><span class="pre">'['</span></tt> and <tt class="docutils literal"><span class="pre">']'</span></tt>.</p>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.TemplateManager.parseArguments" title="SlicerWizard.TemplateManager.parseArguments"><tt class="xref py py-meth docutils literal"><span class="pre">parseArguments()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.TemplateManager.addCategoryPath">
+<tt class="descname">addCategoryPath</tt><big>(</big><em>category</em>, <em>path</em><big>)</big><a class="headerlink" href="#SlicerWizard.TemplateManager.addCategoryPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add templates for a particular category to the collection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>category</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Category of templates to add.</li>
+<li><strong>path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Path to a directory containing templates.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.KeyError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt></a> if <tt class="docutils literal"><span class="pre">category</span></tt> is not a known template
+category.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This adds all templates found in <tt class="docutils literal"><span class="pre">path</span></tt> to <tt class="docutils literal"><span class="pre">category</span></tt> to the collection,
+where each subdirectory of <tt class="docutils literal"><span class="pre">path</span></tt> is a template. If <tt class="docutils literal"><span class="pre">path</span></tt> contains any
+templates whose names already exist in the <tt class="docutils literal"><span class="pre">category</span></tt> of the collection
+(case insensitive), the existing entries are replaced.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.TemplateManager.addPath">
+<tt class="descname">addPath</tt><big>(</big><em>basePath</em><big>)</big><a class="headerlink" href="#SlicerWizard.TemplateManager.addPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a template path to the collection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>basePath</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Path to a directory containing categorized templates.</td>
+</tr>
+</tbody>
+</table>
+<p>This adds categorized templates to the collection. <tt class="docutils literal"><span class="pre">basePath</span></tt> should be
+a directory which contains one or more directories whose names match a
+known template category (case insensitive). Each such subdirectory is added
+to the collection via <a class="reference internal" href="#SlicerWizard.TemplateManager.addCategoryPath" title="SlicerWizard.TemplateManager.addCategoryPath"><tt class="xref py py-meth docutils literal"><span class="pre">addCategoryPath()</span></tt></a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.TemplateManager.copyTemplate">
+<tt class="descname">copyTemplate</tt><big>(</big><em>destination</em>, <em>category</em>, <em>kind</em>, <em>name</em><big>)</big><a class="headerlink" href="#SlicerWizard.TemplateManager.copyTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy (instantiate) a template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>destination</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Directory in which to create the template copy.</li>
+<li><strong>category</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Category of template to instantiate.</li>
+<li><strong>kind</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name of template to instantiate.</li>
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name for the instantiated template.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Path to the new instance (<tt class="docutils literal"><span class="pre">os.path.join(destination,</span> <span class="pre">name)</span></tt>).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">unicode</span></tt> if either <tt class="docutils literal"><span class="pre">destination</span></tt> and/or <tt class="docutils literal"><span class="pre">name</span></tt> is also
+<tt class="xref py py-class docutils literal"><span class="pre">unicode</span></tt>, otherwise <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.KeyError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt></a> if the specified template is not found.</li>
+<li><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.IOError" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">IOError</span></tt></a> if a subdirectory <tt class="docutils literal"><span class="pre">name</span></tt> already exists.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This creates a copy of the specified template in <tt class="docutils literal"><span class="pre">destination</span></tt>, with
+occurrences of the template&#8217;s key replaced with <tt class="docutils literal"><span class="pre">name</span></tt>. The new copy is
+in a subdirectory <tt class="docutils literal"><span class="pre">name</span></tt>, which must not exist.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The replacement of the template key is case sensitive, however               the upper-case key is also replaced with the upper-case <tt class="docutils literal"><span class="pre">name</span></tt>.</p>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.TemplateManager.setKey" title="SlicerWizard.TemplateManager.setKey"><tt class="xref py py-meth docutils literal"><span class="pre">setKey()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.TemplateManager.listTemplates">
+<tt class="descname">listTemplates</tt><big>(</big><big>)</big><a class="headerlink" href="#SlicerWizard.TemplateManager.listTemplates" title="Permalink to this definition">¶</a></dt>
+<dd><p>List available templates.</p>
+<p>This displays a list of all available templates, using <a class="reference external" href="http://docs.python.org/2.7/library/logging.html#logging.info" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">logging.info()</span></tt></a>,
+organized by category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.TemplateManager.parseArguments">
+<tt class="descname">parseArguments</tt><big>(</big><em>args</em><big>)</big><a class="headerlink" href="#SlicerWizard.TemplateManager.parseArguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically add paths and keys from <abbr title="Command Line Interface">CLI</abbr> arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args.templatePath</strong> (<tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of <tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; List of additional template paths.</li>
+<li><strong>args.templateKey</strong> (<tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of <tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; List of user-specified template key mappings.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This parses template-related command line arguments and updates the
+collection accordingly:</p>
+<ul class="simple">
+<li>Additional template paths are provided in the form
+<tt class="docutils literal"><span class="pre">'[category=]path'</span></tt>, and are added with either <a class="reference internal" href="#SlicerWizard.TemplateManager.addPath" title="SlicerWizard.TemplateManager.addPath"><tt class="xref py py-meth docutils literal"><span class="pre">addPath()</span></tt></a> (if
+<tt class="docutils literal"><span class="pre">category</span></tt> is omitted) or <a class="reference internal" href="#SlicerWizard.TemplateManager.addCategoryPath" title="SlicerWizard.TemplateManager.addCategoryPath"><tt class="xref py py-meth docutils literal"><span class="pre">addCategoryPath()</span></tt></a> (otherwise).</li>
+<li>Template keys are provided in the form <tt class="docutils literal"><span class="pre">'name=value'</span></tt>, and are
+registered using <a class="reference internal" href="#SlicerWizard.TemplateManager.setKey" title="SlicerWizard.TemplateManager.setKey"><tt class="xref py py-meth docutils literal"><span class="pre">setKey()</span></tt></a>.</li>
+</ul>
+<p>If a usage error is found, the application is terminated by calling
+<a class="reference internal" href="#SlicerWizard.Utilities.die" title="SlicerWizard.Utilities.die"><tt class="xref py py-func docutils literal"><span class="pre">die()</span></tt></a> with an appropriate error message.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.TemplateManager.parseArguments" title="SlicerWizard.TemplateManager.parseArguments"><tt class="xref py py-meth docutils literal"><span class="pre">parseArguments()</span></tt></a>, <a class="reference internal" href="#SlicerWizard.TemplateManager.addPath" title="SlicerWizard.TemplateManager.addPath"><tt class="xref py py-meth docutils literal"><span class="pre">addPath()</span></tt></a>,
+<a class="reference internal" href="#SlicerWizard.TemplateManager.addCategoryPath" title="SlicerWizard.TemplateManager.addCategoryPath"><tt class="xref py py-meth docutils literal"><span class="pre">addCategoryPath()</span></tt></a>, <a class="reference internal" href="#SlicerWizard.TemplateManager.setKey" title="SlicerWizard.TemplateManager.setKey"><tt class="xref py py-meth docutils literal"><span class="pre">setKey()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="SlicerWizard.TemplateManager.setKey">
+<tt class="descname">setKey</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#SlicerWizard.TemplateManager.setKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set template key for specified template.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Name of template for which to set key.</li>
+<li><strong>key</strong> &#8211; Key for specified template.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This sets the template key for <tt class="docutils literal"><span class="pre">name</span></tt> to <tt class="docutils literal"><span class="pre">key</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Template keys depend only on the template name, and not the               template category. As a result, two templates with the same name               in different categories will use the same key.</p>
+</div>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.TemplateManager.copyTemplate" title="SlicerWizard.TemplateManager.copyTemplate"><tt class="xref py py-meth docutils literal"><span class="pre">copyTemplate()</span></tt></a></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-SlicerWizard.Utilities">
+<span id="utilities-module"></span><h2>1.8. <tt class="xref py py-mod docutils literal"><span class="pre">Utilities</span></tt> Module<a class="headerlink" href="#module-SlicerWizard.Utilities" title="Permalink to this headline">¶</a></h2>
+<p>Helpers for interacting with <abbr title="Command Line Interface">CLI</abbr> users and <abbr title="Version Control System">VCS</abbr> tools.</p>
+<dl class="function">
+<dt id="SlicerWizard.Utilities.warn">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">warn</tt><big>(</big><em>msg</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#warn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.warn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output a warning message (or messages), with exception if present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or sequence of <tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Message(s) to be output.</td>
+</tr>
+</tbody>
+</table>
+<p>This function outputs the specified message(s) using <a class="reference external" href="http://docs.python.org/2.7/library/logging.html#logging.warning" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">logging.warning()</span></tt></a>.
+If <tt class="docutils literal"><span class="pre">msg</span></tt> is a sequence, each message in the sequence is output, with a call
+to <a class="reference external" href="http://docs.python.org/2.7/library/logging.html#logging.warning" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">logging.warning()</span></tt></a> made for each message.</p>
+<p>If there is a current exception, and debugging is enabled, the exception is
+reported prior to the other message(s) using <a class="reference external" href="http://docs.python.org/2.7/library/logging.html#logging.exception" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">logging.exception()</span></tt></a>.</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.Utilities.initLogging" title="SlicerWizard.Utilities.initLogging"><tt class="xref py py-func docutils literal"><span class="pre">initLogging()</span></tt></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.die">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">die</tt><big>(</big><em>msg</em>, <em>exitCode=1</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#die"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.die" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output an error message (or messages), with exception if present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>msg</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or sequence of <tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Message(s) to be output.</li>
+<li><strong>exitCode</strong> (<tt class="xref py py-class docutils literal"><span class="pre">int</span></tt>) &#8211; Value to use as the exit code of the program.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The output behavior (including possible report of an exception) of this
+function is the same as <a class="reference internal" href="#SlicerWizard.Utilities.warn" title="SlicerWizard.Utilities.warn"><tt class="xref py py-func docutils literal"><span class="pre">warn()</span></tt></a>, except that <a class="reference external" href="http://docs.python.org/2.7/library/logging.html#logging.error" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">logging.error()</span></tt></a> is
+used instead of <a class="reference external" href="http://docs.python.org/2.7/library/logging.html#logging.warning" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">logging.warning()</span></tt></a>. After output, the program is
+terminated by calling <a class="reference external" href="http://docs.python.org/2.7/library/sys.html#sys.exit" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">sys.exit()</span></tt></a> with the specified exit code.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.inquire">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">inquire</tt><big>(</big><em>msg</em>, <em>choices={'y': True</em>, <em>'n': False}</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#inquire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.inquire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get multiple-choice input from the user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>msg</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Text of the prompt which the user will be shown.</li>
+<li><strong>choices</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) &#8211; Map of possible choices to their respective return values.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Value of the selected choice.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function presents a question (<tt class="docutils literal"><span class="pre">msg</span></tt>) to the user and asks them to
+select an option from a list of choices, which are presented in the manner of
+&#8216;git add &#8211;patch&#8217; (i.e. the possible choices are shown between the prompt
+text and the final &#8216;?&#8217;). The prompt is repeated indefinitely until a valid
+selection is made.</p>
+<p>The <tt class="docutils literal"><span class="pre">choices</span></tt> are a <a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>, with each key being a possible choice
+(using a single letter is recommended). The value for the selected key is
+returned to the caller.</p>
+<p>The default <tt class="docutils literal"><span class="pre">choices</span></tt> provides a yes/no prompt with a <tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt> return
+value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.initLogging">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">initLogging</tt><big>(</big><em>logger</em>, <em>args</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#initLogging"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.initLogging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize logging.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args.debug</strong> (<tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt>) &#8211; If <tt class="docutils literal"><span class="pre">True</span></tt>, enable debug logging.</td>
+</tr>
+</tbody>
+</table>
+<p>This sets up the default logging object, with the following characteristics:</p>
+<ul class="simple">
+<li>Messages of <tt class="xref py py-data docutils literal"><span class="pre">WARNING</span></tt> severity or greater will be sent to
+<a class="reference external" href="http://docs.python.org/2.7/library/sys.html#sys.stderr" title="(in Python v2.7)"><tt class="xref py py-data docutils literal"><span class="pre">stderr</span></tt></a>; other messages will be sent to <a class="reference external" href="http://docs.python.org/2.7/library/sys.html#sys.stdout" title="(in Python v2.7)"><tt class="xref py py-data docutils literal"><span class="pre">stdout</span></tt></a>.</li>
+<li>The log level is set to <tt class="xref py py-data docutils literal"><span class="pre">DEBUG</span></tt> if <tt class="docutils literal"><span class="pre">args.debug</span></tt> is
+<tt class="docutils literal"><span class="pre">True</span></tt>, otherwise the log level is set to <tt class="xref py py-data docutils literal"><span class="pre">INFO</span></tt>.</li>
+<li>The log handlers will wrap their output according to the current terminal
+width (<span class="target" id="index-0"></span><tt class="xref std std-envvar docutils literal"><span class="pre">$COLUMNS</span></tt>, if set, else 80).</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.buildProcessArgs">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">buildProcessArgs</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#buildProcessArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.buildProcessArgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build <abbr title="Command Line Interface">CLI</abbr> arguments from Python-like arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>prefix</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Prefix for named options.</li>
+<li><strong>args</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/collections.html#collections.Sequence" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">Sequence</span></tt></a>) &#8211; Positional arguments.</li>
+<li><strong>kwargs</strong> (<a class="reference external" href="http://docs.python.org/2.7/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) &#8211; Named options.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Converted argument list.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><tt class="xref py py-class docutils literal"><span class="pre">list</span></tt> of <tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function converts Python-style arguments, including named arguments, to
+a <abbr title="Command Line Interface">CLI</abbr>-style argument list:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">buildProcessArgs</span><span class="p">(</span><span class="s">&#39;p1&#39;</span><span class="p">,</span> <span class="s">u&#39;p2&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">long_name</span><span class="o">=</span><span class="s">u&#39;hello&#39;</span><span class="p">)</span>
+<span class="go">[&#39;-a&#39;, &#39;5&#39;, &#39;--long-name&#39;, u&#39;hello&#39;, &#39;-b&#39;, &#39;p1&#39;, u&#39;p2&#39;, &#39;12&#39;]</span>
+</pre></div>
+</div>
+<p>Named arguments are converted to named options by adding <tt class="docutils literal"><span class="pre">'-'</span></tt> (if the name
+is one letter) or <tt class="docutils literal"><span class="pre">'--'</span></tt> (otherwise), and converting any underscores
+(<tt class="docutils literal"><span class="pre">'_'</span></tt>) to hyphens (<tt class="docutils literal"><span class="pre">'-'</span></tt>). If the value is <tt class="docutils literal"><span class="pre">True</span></tt>, the option is
+considered a flag that does not take a value. If the value is <tt class="docutils literal"><span class="pre">False</span></tt> or
+<tt class="docutils literal"><span class="pre">None</span></tt>, the option is skipped. Otherwise the stringified value is added
+following the option argument. Positional arguments &#8212; except for <tt class="docutils literal"><span class="pre">None</span></tt>,
+which is skipped &#8212; are similarly stringified and added to the argument list
+following named options.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.createEmptyRepo">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">createEmptyRepo</tt><big>(</big><em>path</em>, <em>tool=None</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#createEmptyRepo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.createEmptyRepo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a repository in an empty or non-existing location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Location which should contain the newly created repository.</li>
+<li><strong>tool</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Name of the <abbr title="Version Control System">VCS</abbr> tool to use to create the repository (e.g. <tt class="docutils literal"><span class="pre">'git'</span></tt>). If
+<tt class="docutils literal"><span class="pre">None</span></tt>, a default tool (git) is used.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">Exception</span></tt></a> if <tt class="docutils literal"><span class="pre">location</span></tt> exists and is not empty, or if
+the specified <abbr title="Version Control System">VCS</abbr> tool is not supported.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This creates a new repository using the specified <tt class="docutils literal"><span class="pre">tool</span></tt> at <tt class="docutils literal"><span class="pre">location</span></tt>,
+first creating <tt class="docutils literal"><span class="pre">location</span></tt> (and any parents) as necessary.</p>
+<p>This function is meant to be passed as the <tt class="docutils literal"><span class="pre">create</span></tt> argument to
+<a class="reference internal" href="#SlicerWizard.Utilities.getRepo" title="SlicerWizard.Utilities.getRepo"><tt class="xref py py-func docutils literal"><span class="pre">getRepo()</span></tt></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only <tt class="docutils literal"><span class="pre">'git'</span></tt> repositories are supported at this time.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.getRepo">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">getRepo</tt><big>(</big><em>path</em>, <em>tool=None</em>, <em>create=False</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#getRepo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.getRepo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain a git repository for the specified path.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt>) &#8211; Path to the repository.</li>
+<li><strong>tool</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; Name of tool used to manage repository, e.g. <tt class="docutils literal"><span class="pre">'git'</span></tt>.</li>
+<li><strong>create</strong> (<tt class="xref py py-class docutils literal"><span class="pre">callable</span></tt> or <tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt>) &#8211; See description.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The repository instance, or <tt class="docutils literal"><span class="pre">None</span></tt> if no such repository exists.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://pythonhosted.org/GitPython/0.3.2/reference.html#git.repo.base.Repo" title="(in GitPython v0.3.2 RC1)"><tt class="xref py py-class docutils literal"><span class="pre">git.Repo</span></tt></a>, <a class="reference internal" href="#SlicerWizard.Subversion.Repository" title="SlicerWizard.Subversion.Repository"><tt class="xref py py-class docutils literal"><span class="pre">Subversion.Repository</span></tt></a>,
+or <tt class="docutils literal"><span class="pre">None</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This attempts to obtain a repository for the specified <tt class="docutils literal"><span class="pre">path</span></tt>. If <tt class="docutils literal"><span class="pre">tool</span></tt>
+is not <tt class="docutils literal"><span class="pre">None</span></tt>, this will only look for a repository that is managed by the
+specified <tt class="docutils literal"><span class="pre">tool</span></tt>; otherwise, all supported repository types will be
+considered.</p>
+<p>If <tt class="docutils literal"><span class="pre">create</span></tt> is callable, the specified function will be called to create
+the repository if one does not exist. Otherwise if <tt class="docutils literal"><span class="pre">bool(create)</span></tt> is
+<tt class="docutils literal"><span class="pre">True</span></tt>, and <tt class="docutils literal"><span class="pre">tool</span></tt> is either <tt class="docutils literal"><span class="pre">None</span></tt> or <tt class="docutils literal"><span class="pre">'git'</span></tt>, a repository is
+created using <a class="reference external" href="http://pythonhosted.org/GitPython/0.3.2/reference.html#git.repo.base.Repo.init" title="(in GitPython v0.3.2 RC1)"><tt class="xref py py-meth docutils literal"><span class="pre">git.Repo.init</span></tt></a>. (Creation
+of other repository types is only supported at this time via a callable
+<tt class="docutils literal"><span class="pre">create</span></tt>.)</p>
+<div class="admonition-see-also admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#SlicerWizard.Utilities.createEmptyRepo" title="SlicerWizard.Utilities.createEmptyRepo"><tt class="xref py py-func docutils literal"><span class="pre">createEmptyRepo()</span></tt></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.getRemote">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">getRemote</tt><big>(</big><em>repo</em>, <em>urls</em>, <em>create=None</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#getRemote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.getRemote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the remote matching a URL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>repo</strong> (<a class="reference external" href="http://pythonhosted.org/GitPython/0.3.2/reference.html#git.repo.base.Repo" title="(in GitPython v0.3.2 RC1)"><tt class="xref py py-class docutils literal"><span class="pre">git.Repo</span></tt></a>) &#8211; repository instance from which to obtain the remote.</li>
+<li><strong>urls</strong> (<tt class="xref py py-class docutils literal"><span class="pre">str</span></tt> or sequence of <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>) &#8211; A URL or list of URL&#8217;s of the remote to obtain.</li>
+<li><strong>create</strong> (<tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt> or <tt class="docutils literal"><span class="pre">None</span></tt>) &#8211; What to name the remote when creating it, if it doesn&#8217;t exist.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A matching or newly created <a class="reference external" href="http://pythonhosted.org/GitPython/0.3.2/reference.html#git.remote.Remote" title="(in GitPython v0.3.2 RC1)"><tt class="xref py py-class docutils literal"><span class="pre">git.Remote</span></tt></a>, or
+<tt class="docutils literal"><span class="pre">None</span></tt> if no such remote exists.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">Exception</span></tt></a> if, when trying to create a remote, a remote
+with the specified name already exists.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This attempts to find a git remote of the specified repository whose upstream
+URL matches (one of) <tt class="docutils literal"><span class="pre">urls</span></tt>. If no such remote exists and <tt class="docutils literal"><span class="pre">create</span></tt> is not
+<tt class="docutils literal"><span class="pre">None</span></tt>, a new remote named <tt class="docutils literal"><span class="pre">create</span></tt> will be created using the first URL
+of <tt class="docutils literal"><span class="pre">urls</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.localRoot">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">localRoot</tt><big>(</big><em>repo</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#localRoot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.localRoot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get top level local directory of a repository.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>repo</strong> (<a class="reference external" href="http://pythonhosted.org/GitPython/0.3.2/reference.html#git.repo.base.Repo" title="(in GitPython v0.3.2 RC1)"><tt class="xref py py-class docutils literal"><span class="pre">git.Repo</span></tt></a> or
+<a class="reference internal" href="#SlicerWizard.Subversion.Repository" title="SlicerWizard.Subversion.Repository"><tt class="xref py py-class docutils literal"><span class="pre">Subversion.Repository</span></tt></a>.) &#8211; Repository instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Absolute path to the repository local root.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">Exception</span></tt></a> if the local root cannot be determined.</td>
+</tr>
+</tbody>
+</table>
+<p>This returns the local file system path to the top level of a repository
+working tree / working copy.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="SlicerWizard.Utilities.vcsPrivateDirectory">
+<tt class="descclassname">SlicerWizard.Utilities.</tt><tt class="descname">vcsPrivateDirectory</tt><big>(</big><em>repo</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Utilities.html#vcsPrivateDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Utilities.vcsPrivateDirectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get <abbr title="Version Control System">VCS</abbr> private directory of a repository.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>repo</strong> (<a class="reference external" href="http://pythonhosted.org/GitPython/0.3.2/reference.html#git.repo.base.Repo" title="(in GitPython v0.3.2 RC1)"><tt class="xref py py-class docutils literal"><span class="pre">git.Repo</span></tt></a> or
+<a class="reference internal" href="#SlicerWizard.Subversion.Repository" title="SlicerWizard.Subversion.Repository"><tt class="xref py py-class docutils literal"><span class="pre">Subversion.Repository</span></tt></a>.) &#8211; Repository instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Absolute path to the <abbr title="Version Control System">VCS</abbr> private directory.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">basestring</span></tt></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><a class="reference external" href="http://docs.python.org/2.7/library/exceptions.html#exceptions.Exception" title="(in Python v2.7)"><tt class="xref py py-exc docutils literal"><span class="pre">Exception</span></tt></a> if the private directory cannot be determined.</td>
+</tr>
+</tbody>
+</table>
+<p>This returns the <abbr title="Version Control System">VCS</abbr> private directory for a repository, e.g. the <tt class="docutils literal"><span class="pre">.git</span></tt>
+or <tt class="docutils literal"><span class="pre">.svn</span></tt> directory.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="wizardhelpformatter-object">
+<h2>1.9. <tt class="xref py py-class docutils literal"><span class="pre">WizardHelpFormatter</span></tt> Object<a class="headerlink" href="#wizardhelpformatter-object" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="SlicerWizard.WizardHelpFormatter">
+<em class="property">class </em><tt class="descclassname">SlicerWizard.</tt><tt class="descname">WizardHelpFormatter</tt><big>(</big><em>prog</em>, <em>indent_increment=2</em>, <em>max_help_position=24</em>, <em>width=None</em><big>)</big><a class="headerlink" href="#SlicerWizard.WizardHelpFormatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">argparse.HelpFormatter</span></tt></p>
+<p>Custom formatter for ExtensionWizard <abbr title="Command Line Interface">CLI</abbr> arguments.</p>
+<p>This formatter overrides <tt class="xref py py-class docutils literal"><span class="pre">argparse.HelpFormatter</span></tt> in order to replace
+occurrences of the &#8216;&lt;&#8217; and &#8216;&gt;&#8217; characters with &#8216;[&#8216; and &#8216;]&#8217;, respectively.
+This is done to work around the formatter&#8217;s wrapping, which tries to break
+metavars if they contain these characters and then becomes confused (read:
+raises an assertion).</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. SlicerWizard Package</a><ul>
+<li><a class="reference internal" href="#module-SlicerWizard.CMakeParser">1.1. <tt class="docutils literal"><span class="pre">CMakeParser</span></tt> Module</a></li>
+<li><a class="reference internal" href="#extensiondescription-object">1.2. <tt class="docutils literal"><span class="pre">ExtensionDescription</span></tt> Object</a></li>
+<li><a class="reference internal" href="#extensionproject-object">1.3. <tt class="docutils literal"><span class="pre">ExtensionProject</span></tt> Object</a></li>
+<li><a class="reference internal" href="#extensionwizard-object">1.4. <tt class="docutils literal"><span class="pre">ExtensionWizard</span></tt> Object</a></li>
+<li><a class="reference internal" href="#module-SlicerWizard.GithubHelper">1.5. <tt class="docutils literal"><span class="pre">GithubHelper</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-SlicerWizard.Subversion">1.6. <tt class="docutils literal"><span class="pre">Subversion</span></tt> Module</a></li>
+<li><a class="reference internal" href="#templatemanager-object">1.7. <tt class="docutils literal"><span class="pre">TemplateManager</span></tt> Object</a></li>
+<li><a class="reference internal" href="#module-SlicerWizard.Utilities">1.8. <tt class="docutils literal"><span class="pre">Utilities</span></tt> Module</a></li>
+<li><a class="reference internal" href="#wizardhelpformatter-object">1.9. <tt class="docutils literal"><span class="pre">WizardHelpFormatter</span></tt> Object</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to SlicerWizard&#8217;s documentation!</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/SlicerWizard.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to SlicerWizard’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">SlicerWizard 4.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kitware.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

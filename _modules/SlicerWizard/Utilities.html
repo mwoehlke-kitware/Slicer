@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>SlicerWizard.Utilities &mdash; SlicerWizard 4.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="SlicerWizard 4.3 documentation" href="../../index.html" />
+    <link rel="up" title="SlicerWizard" href="../SlicerWizard.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SlicerWizard 4.3 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../SlicerWizard.html" accesskey="U">SlicerWizard</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for SlicerWizard.Utilities</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Helpers for interacting with |CLI| users and |VCS| tools.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+
+<span class="k">try</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">git</span>
+  <span class="n">_haveGit</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+  <span class="n">_haveGit</span> <span class="o">=</span> <span class="bp">False</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">&#39;warn&#39;</span><span class="p">,</span>
+  <span class="s">&#39;die&#39;</span><span class="p">,</span>
+  <span class="s">&#39;inquire&#39;</span><span class="p">,</span>
+  <span class="s">&#39;initLogging&#39;</span><span class="p">,</span>
+  <span class="s">&#39;buildProcessArgs&#39;</span><span class="p">,</span>
+  <span class="s">&#39;createEmptyRepo&#39;</span><span class="p">,</span>
+  <span class="s">&#39;getRepo&#39;</span><span class="p">,</span>
+  <span class="s">&#39;getRemote&#39;</span><span class="p">,</span>
+  <span class="s">&#39;localRoot&#39;</span><span class="p">,</span>
+  <span class="s">&#39;vcsPrivateDirectory&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">_yesno</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">&quot;y&quot;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+  <span class="s">&quot;n&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_logLevel</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="c">#=============================================================================</span>
+<span class="k">class</span> <span class="nc">_LogWrapFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">):</span>
+  <span class="c">#---------------------------------------------------------------------------</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">_LogWrapFormatter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;COLUMNS&#39;</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">except</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="mi">79</span>
+
+  <span class="c">#---------------------------------------------------------------------------</span>
+  <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">_LogWrapFormatter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+
+<span class="c">#=============================================================================</span>
+<span class="k">class</span> <span class="nc">_LogReverseLevelFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
+  <span class="c">#---------------------------------------------------------------------------</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">levelLimit</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_levelLimit</span> <span class="o">=</span> <span class="n">levelLimit</span>
+
+  <span class="c">#---------------------------------------------------------------------------</span>
+  <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levelLimit</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">_log</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">_logLevel</span> <span class="o">&lt;=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+      <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">msg</span><span class="p">:</span>
+      <span class="n">func</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">func</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="warn"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.warn">[docs]</a><span class="k">def</span> <span class="nf">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Output a warning message (or messages), with exception if present.</span>
+
+<span class="sd">  :param msg: Message(s) to be output.</span>
+<span class="sd">  :type msg: :class:`basestring` or sequence of :class:`basestring`</span>
+
+<span class="sd">  This function outputs the specified message(s) using :func:`logging.warning`.</span>
+<span class="sd">  If ``msg`` is a sequence, each message in the sequence is output, with a call</span>
+<span class="sd">  to :func:`logging.warning` made for each message.</span>
+
+<span class="sd">  If there is a current exception, and debugging is enabled, the exception is</span>
+<span class="sd">  reported prior to the other message(s) using :func:`logging.exception`.</span>
+
+<span class="sd">  .. seealso:: :func:`.initLogging`.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="die"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.die">[docs]</a><span class="k">def</span> <span class="nf">die</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">exitCode</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Output an error message (or messages), with exception if present.</span>
+
+<span class="sd">  :param msg: Message(s) to be output.</span>
+<span class="sd">  :type msg: :class:`basestring` or sequence of :class:`basestring`</span>
+<span class="sd">  :param exitCode: Value to use as the exit code of the program.</span>
+<span class="sd">  :type exitCode: :class:`int`</span>
+
+<span class="sd">  The output behavior (including possible report of an exception) of this</span>
+<span class="sd">  function is the same as :func:`.warn`, except that :func:`logging.error` is</span>
+<span class="sd">  used instead of :func:`logging.warning`. After output, the program is</span>
+<span class="sd">  terminated by calling :func:`sys.exit` with the specified exit code.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+  <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">exitCode</span><span class="p">)</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="inquire"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.inquire">[docs]</a><span class="k">def</span> <span class="nf">inquire</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">_yesno</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Get multiple-choice input from the user.</span>
+
+<span class="sd">  :param msg:</span>
+<span class="sd">    Text of the prompt which the user will be shown.</span>
+<span class="sd">  :type msg:</span>
+<span class="sd">    :class:`basestring`</span>
+<span class="sd">  :param choices:</span>
+<span class="sd">    Map of possible choices to their respective return values.</span>
+<span class="sd">  :type choices:</span>
+<span class="sd">    :class:`dict`</span>
+
+<span class="sd">  :returns:</span>
+<span class="sd">    Value of the selected choice.</span>
+
+<span class="sd">  This function presents a question (``msg``) to the user and asks them to</span>
+<span class="sd">  select an option from a list of choices, which are presented in the manner of</span>
+<span class="sd">  &#39;git add --patch&#39; (i.e. the possible choices are shown between the prompt</span>
+<span class="sd">  text and the final &#39;?&#39;). The prompt is repeated indefinitely until a valid</span>
+<span class="sd">  selection is made.</span>
+
+<span class="sd">  The ``choices`` are a :class:`dict`, with each key being a possible choice</span>
+<span class="sd">  (using a single letter is recommended). The value for the selected key is</span>
+<span class="sd">  returned to the caller.</span>
+
+<span class="sd">  The default ``choices`` provides a yes/no prompt with a :class:`bool` return</span>
+<span class="sd">  value.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">choiceKeys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">choices</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+  <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">? &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">choiceKeys</span><span class="p">))</span>
+
+  <span class="k">def</span> <span class="nf">throw</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+
+  <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">&quot;choice&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">choiceKeys</span><span class="p">)</span>
+  <span class="n">parser</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="n">throw</span>
+
+  <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="nb">raw_input</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+      <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">choice</span> <span class="ow">in</span> <span class="n">choices</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">choices</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">choice</span><span class="p">]</span>
+
+    <span class="k">except</span><span class="p">:</span>
+      <span class="k">pass</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="initLogging"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.initLogging">[docs]</a><span class="k">def</span> <span class="nf">initLogging</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Initialize logging.</span>
+
+<span class="sd">  :param args.debug: If ``True``, enable debug logging.</span>
+<span class="sd">  :type args.debug: :class:`bool`</span>
+
+<span class="sd">  This sets up the default logging object, with the following characteristics:</span>
+
+<span class="sd">  * Messages of :data:`~logging.WARNING` severity or greater will be sent to</span>
+<span class="sd">    :data:`~sys.stderr`; other messages will be sent to :data:`~sys.stdout`.</span>
+<span class="sd">  * The log level is set to :data:`~logging.DEBUG` if ``args.debug`` is</span>
+<span class="sd">    ``True``, otherwise the log level is set to :data:`~logging.INFO`.</span>
+<span class="sd">  * The log handlers will wrap their output according to the current terminal</span>
+<span class="sd">    width (:envvar:`$COLUMNS`, if set, else 80).</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">global</span> <span class="n">_logLevel</span>
+  <span class="n">_logLevel</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">debug</span> <span class="k">else</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+
+  <span class="c"># Create log output formatter</span>
+  <span class="n">f</span> <span class="o">=</span> <span class="n">_LogWrapFormatter</span><span class="p">()</span>
+
+  <span class="c"># Create log output stream handlers</span>
+  <span class="n">lho</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+  <span class="n">lho</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">_logLevel</span><span class="p">)</span>
+  <span class="n">lho</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="n">_LogReverseLevelFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">))</span>
+  <span class="n">lho</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+  <span class="n">lhe</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+  <span class="n">lhe</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+  <span class="n">lhe</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+  <span class="c"># Set root logging level and add handlers</span>
+  <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">lho</span><span class="p">)</span>
+  <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">lhe</span><span class="p">)</span>
+  <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">_logLevel</span><span class="p">)</span>
+
+  <span class="c"># Turn of github debugging</span>
+  <span class="n">ghLogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;github&quot;</span><span class="p">)</span>
+  <span class="n">ghLogger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="buildProcessArgs"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.buildProcessArgs">[docs]</a><span class="k">def</span> <span class="nf">buildProcessArgs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Build |CLI| arguments from Python-like arguments.</span>
+
+<span class="sd">  :param prefix: Prefix for named options.</span>
+<span class="sd">  :type prefix: :class:`basestring`</span>
+<span class="sd">  :param args: Positional arguments.</span>
+<span class="sd">  :type args: :class:`~collections.Sequence`</span>
+<span class="sd">  :param kwargs: Named options.</span>
+<span class="sd">  :type kwargs: :class:`dict`</span>
+
+<span class="sd">  :return: Converted argument list.</span>
+<span class="sd">  :rtype: :class:`list` of :class:`basestring`</span>
+
+<span class="sd">  This function converts Python-style arguments, including named arguments, to</span>
+<span class="sd">  a |CLI|-style argument list:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">    &gt;&gt;&gt; buildProcessArgs(&#39;p1&#39;, u&#39;p2&#39;, None, 12, a=5, b=True, long_name=u&#39;hello&#39;)</span>
+<span class="sd">    [&#39;-a&#39;, &#39;5&#39;, &#39;--long-name&#39;, u&#39;hello&#39;, &#39;-b&#39;, &#39;p1&#39;, u&#39;p2&#39;, &#39;12&#39;]</span>
+
+<span class="sd">  Named arguments are converted to named options by adding ``&#39;-&#39;`` (if the name</span>
+<span class="sd">  is one letter) or ``&#39;--&#39;`` (otherwise), and converting any underscores</span>
+<span class="sd">  (``&#39;_&#39;``) to hyphens (``&#39;-&#39;``). If the value is ``True``, the option is</span>
+<span class="sd">  considered a flag that does not take a value. If the value is ``False`` or</span>
+<span class="sd">  ``None``, the option is skipped. Otherwise the stringified value is added</span>
+<span class="sd">  following the option argument. Positional arguments --- except for ``None``,</span>
+<span class="sd">  which is skipped --- are similarly stringified and added to the argument list</span>
+<span class="sd">  following named options.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+  <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">v</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+      <span class="k">continue</span>
+
+    <span class="n">result</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&quot;-&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s">&quot;--&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="s">&quot;-&quot;</span><span class="p">))]</span>
+
+    <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="n">result</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">v</span><span class="p">]</span>
+
+  <span class="k">return</span> <span class="n">result</span> <span class="o">+</span> <span class="p">[</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">]</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="createEmptyRepo"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.createEmptyRepo">[docs]</a><span class="k">def</span> <span class="nf">createEmptyRepo</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Create a repository in an empty or non-existing location.</span>
+
+<span class="sd">  :param path:</span>
+<span class="sd">    Location which should contain the newly created repository.</span>
+<span class="sd">  :type path:</span>
+<span class="sd">    :class:`basestring`</span>
+<span class="sd">  :param tool:</span>
+<span class="sd">    Name of the |VCS| tool to use to create the repository (e.g. ``&#39;git&#39;``). If</span>
+<span class="sd">    ``None``, a default tool (git) is used.</span>
+<span class="sd">  :type tool:</span>
+<span class="sd">    :class:`basestring` or ``None``</span>
+
+<span class="sd">  :raises:</span>
+<span class="sd">    :exc:`~exceptions.Exception` if ``location`` exists and is not empty, or if</span>
+<span class="sd">    the specified |VCS| tool is not supported.</span>
+
+<span class="sd">  This creates a new repository using the specified ``tool`` at ``location``,</span>
+<span class="sd">  first creating ``location`` (and any parents) as necessary.</span>
+
+<span class="sd">  This function is meant to be passed as the ``create`` argument to</span>
+<span class="sd">  :func:`.getRepo`.</span>
+
+<span class="sd">  .. note:: Only ``&#39;git&#39;`` repositories are supported at this time.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c"># Check that the requested tool is supported</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">_haveGit</span> <span class="ow">or</span> <span class="n">tool</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;git&quot;</span> <span class="p">}:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;unable to create </span><span class="si">%r</span><span class="s"> repository&quot;</span> <span class="o">%</span> <span class="n">tool</span><span class="p">)</span>
+
+  <span class="c"># Create a repository at the specified location</span>
+  <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;refusing to create repository in non-empty directory&quot;</span><span class="p">)</span>
+
+  <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">git</span><span class="o">.</span><span class="n">Repo</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="getRepo"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.getRepo">[docs]</a><span class="k">def</span> <span class="nf">getRepo</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Obtain a git repository for the specified path.</span>
+
+<span class="sd">  :param path: Path to the repository.</span>
+<span class="sd">  :type path: :class:`basestring`</span>
+<span class="sd">  :param tool: Name of tool used to manage repository, e.g. ``&#39;git&#39;``.</span>
+<span class="sd">  :type tool: :class:`basestring` or ``None``</span>
+<span class="sd">  :param create: See description.</span>
+<span class="sd">  :type create: :class:`callable` or :class:`bool`</span>
+
+<span class="sd">  :returns:</span>
+<span class="sd">    The repository instance, or ``None`` if no such repository exists.</span>
+<span class="sd">  :rtype:</span>
+<span class="sd">    :class:`git.Repo &lt;git:git.repo.base.Repo&gt;`, :class:`.Subversion.Repository`,</span>
+<span class="sd">    or ``None``.</span>
+
+<span class="sd">  This attempts to obtain a repository for the specified ``path``. If ``tool``</span>
+<span class="sd">  is not ``None``, this will only look for a repository that is managed by the</span>
+<span class="sd">  specified ``tool``; otherwise, all supported repository types will be</span>
+<span class="sd">  considered.</span>
+
+<span class="sd">  If ``create`` is callable, the specified function will be called to create</span>
+<span class="sd">  the repository if one does not exist. Otherwise if ``bool(create)`` is</span>
+<span class="sd">  ``True``, and ``tool`` is either ``None`` or ``&#39;git&#39;``, a repository is</span>
+<span class="sd">  created using :meth:`git.Repo.init &lt;git:git.repo.base.Repo.init&gt;`. (Creation</span>
+<span class="sd">  of other repository types is only supported at this time via a callable</span>
+<span class="sd">  ``create``.)</span>
+
+<span class="sd">  .. seealso:: :func:`.createEmptyRepo`</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">Subversion</span>
+
+  <span class="c"># Try to obtain git repository</span>
+  <span class="k">if</span> <span class="n">_haveGit</span> <span class="ow">and</span> <span class="n">tool</span> <span class="ow">in</span> <span class="p">{</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;git&quot;</span> <span class="p">}:</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">repo</span> <span class="o">=</span> <span class="n">git</span><span class="o">.</span><span class="n">Repo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">repo</span>
+
+    <span class="k">except</span><span class="p">:</span>
+      <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s"> is not a git repository&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+
+  <span class="c"># Try to obtain subversion repository</span>
+  <span class="k">if</span> <span class="n">tool</span> <span class="ow">in</span> <span class="p">{</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;svn&quot;</span> <span class="p">}:</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">repo</span> <span class="o">=</span> <span class="n">Subversion</span><span class="o">.</span><span class="n">Repository</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">repo</span>
+
+    <span class="k">except</span><span class="p">:</span>
+      <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s"> is not a svn repository&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+
+  <span class="c"># Specified path is not a supported / allowed repository; create a repository</span>
+  <span class="c"># if requested, otherwise return None</span>
+  <span class="k">if</span> <span class="n">create</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">create</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">create</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">tool</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">_haveGit</span> <span class="ow">and</span> <span class="n">tool</span> <span class="ow">in</span> <span class="p">{</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;git&quot;</span> <span class="p">}:</span>
+      <span class="k">return</span> <span class="n">git</span><span class="o">.</span><span class="n">Repo</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;unable to create </span><span class="si">%r</span><span class="s"> repository&quot;</span> <span class="o">%</span> <span class="n">tool</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="bp">None</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="getRemote"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.getRemote">[docs]</a><span class="k">def</span> <span class="nf">getRemote</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">urls</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Get the remote matching a URL.</span>
+
+<span class="sd">  :param repo:</span>
+<span class="sd">    repository instance from which to obtain the remote.</span>
+<span class="sd">  :type repo:</span>
+<span class="sd">    :class:`git.Repo &lt;git:git.repo.base.Repo&gt;`</span>
+<span class="sd">  :param urls:</span>
+<span class="sd">    A URL or list of URL&#39;s of the remote to obtain.</span>
+<span class="sd">  :type urls:</span>
+<span class="sd">    :class:`str` or sequence of :class:`str`</span>
+<span class="sd">  :param create:</span>
+<span class="sd">    What to name the remote when creating it, if it doesn&#39;t exist.</span>
+<span class="sd">  :type create: :class:`basestring` or ``None``</span>
+
+<span class="sd">  :returns:</span>
+<span class="sd">    A matching or newly created :class:`git.Remote &lt;git:git.remote.Remote&gt;`, or</span>
+<span class="sd">    ``None`` if no such remote exists.</span>
+
+<span class="sd">  :raises:</span>
+<span class="sd">    :exc:`~exceptions.Exception` if, when trying to create a remote, a remote</span>
+<span class="sd">    with the specified name already exists.</span>
+
+<span class="sd">  This attempts to find a git remote of the specified repository whose upstream</span>
+<span class="sd">  URL matches (one of) ``urls``. If no such remote exists and ``create`` is not</span>
+<span class="sd">  ``None``, a new remote named ``create`` will be created using the first URL</span>
+<span class="sd">  of ``urls``.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">urls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+
+  <span class="k">for</span> <span class="n">remote</span> <span class="ow">in</span> <span class="n">repo</span><span class="o">.</span><span class="n">remotes</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">remote</span>
+
+  <span class="k">if</span> <span class="n">create</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">create</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;name of remote to create must be a string&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">repo</span><span class="o">.</span><span class="n">remotes</span><span class="p">,</span> <span class="n">create</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;cannot create remote &#39;</span><span class="si">%s</span><span class="s">&#39;:&quot;</span>
+                      <span class="s">&quot; a remote with that name already exists&quot;</span> <span class="o">%</span> <span class="n">create</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">create_remote</span><span class="p">(</span><span class="n">create</span><span class="p">,</span> <span class="n">urls</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+  <span class="k">return</span> <span class="bp">None</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="localRoot"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.localRoot">[docs]</a><span class="k">def</span> <span class="nf">localRoot</span><span class="p">(</span><span class="n">repo</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Get top level local directory of a repository.</span>
+
+<span class="sd">  :param repo:</span>
+<span class="sd">    Repository instance.</span>
+<span class="sd">  :type repo:</span>
+<span class="sd">    :class:`git.Repo &lt;git:git.repo.base.Repo&gt;` or</span>
+<span class="sd">    :class:`.Subversion.Repository`.</span>
+
+<span class="sd">  :return: Absolute path to the repository local root.</span>
+<span class="sd">  :rtype: :class:`basestring`</span>
+
+<span class="sd">  :raises: :exc:`~exceptions.Exception` if the local root cannot be determined.</span>
+
+<span class="sd">  This returns the local file system path to the top level of a repository</span>
+<span class="sd">  working tree / working copy.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="s">&quot;working_tree_dir&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">working_tree_dir</span>
+
+  <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="s">&quot;wc_root&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">wc_root</span>
+
+  <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;unable to determine repository local root&quot;</span><span class="p">)</span>
+
+<span class="c">#-----------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="vcsPrivateDirectory"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Utilities.vcsPrivateDirectory">[docs]</a><span class="k">def</span> <span class="nf">vcsPrivateDirectory</span><span class="p">(</span><span class="n">repo</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Get |VCS| private directory of a repository.</span>
+
+<span class="sd">  :param repo:</span>
+<span class="sd">    Repository instance.</span>
+<span class="sd">  :type repo:</span>
+<span class="sd">    :class:`git.Repo &lt;git:git.repo.base.Repo&gt;` or</span>
+<span class="sd">    :class:`.Subversion.Repository`.</span>
+
+<span class="sd">  :return: Absolute path to the |VCS| private directory.</span>
+<span class="sd">  :rtype: :class:`basestring`</span>
+
+<span class="sd">  :raises:</span>
+<span class="sd">    :exc:`~exceptions.Exception` if the private directory cannot be determined.</span>
+
+<span class="sd">  This returns the |VCS| private directory for a repository, e.g. the ``.git``</span>
+<span class="sd">  or ``.svn`` directory.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="s">&quot;git_dir&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">git_dir</span>
+
+  <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="s">&quot;svn_dir&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">repo</span><span class="o">.</span><span class="n">svn_dir</span>
+
+  <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;unable to determine repository local private directory&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SlicerWizard 4.3 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../SlicerWizard.html" >SlicerWizard</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kitware.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

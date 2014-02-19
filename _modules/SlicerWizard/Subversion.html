@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>SlicerWizard.Subversion &mdash; SlicerWizard 4.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="SlicerWizard 4.3 documentation" href="../../index.html" />
+    <link rel="up" title="SlicerWizard" href="../SlicerWizard.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SlicerWizard 4.3 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../SlicerWizard.html" accesskey="U">SlicerWizard</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for SlicerWizard.Subversion</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Helpers for interacting with git.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">from</span> <span class="nn">.Utilities</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s">&#39;Client&#39;</span><span class="p">,</span>
+  <span class="s">&#39;Repository&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c">#=============================================================================</span>
+<span class="k">class</span> <span class="nc">CommandError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  .. attribute:: command</span>
+
+<span class="sd">    Complete command (including arguments) which experienced the error.</span>
+
+<span class="sd">  .. attribute:: code</span>
+
+<span class="sd">    Command&#39;s status code.</span>
+
+<span class="sd">  .. attribute:: stderr</span>
+
+<span class="sd">    Raw text of the command&#39;s standard error stream.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c">#---------------------------------------------------------------------------</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">stderr</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s"> command exited with non-zero status&quot;</span> <span class="o">%</span>
+                                    <span class="n">command</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">code</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span>
+
+<span class="c">#=============================================================================</span>
+<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Subversion.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Wrapper for executing the ``svn`` process.</span>
+
+<span class="sd">  This class provides a convenience wrapping for invoking the ``svn`` process.</span>
+<span class="sd">  In addition to the :meth:`~Client.execute` method, names of subversion</span>
+<span class="sd">  commands are implicitly available as methods:</span>
+
+<span class="sd">  .. code-block:: python</span>
+
+<span class="sd">    c = Subversion.Client()</span>
+<span class="sd">    c.log(&#39;.&#39;, limit=5)</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c">#---------------------------------------------------------------------------</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repo</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_wc_root</span> <span class="o">=</span> <span class="n">repo</span><span class="o">.</span><span class="n">wc_root</span> <span class="k">if</span> <span class="n">repo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="bp">None</span>
+
+  <span class="c">#---------------------------------------------------------------------------</span>
+  <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a lambda to invoke the svn command ``name``.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;_&quot;</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%r</span><span class="s"> object has no attribute </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span>
+                           <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+  <span class="c">#---------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="Client.execute"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Subversion.Client.execute">[docs]</a>  <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Execute ``command`` and return line-split output.</span>
+
+<span class="sd">    :param args: Subversion command to execute.</span>
+<span class="sd">    :type args: :class:`basestring`</span>
+<span class="sd">    :param args: Arguments to pass to ``command``.</span>
+<span class="sd">    :type args: :class:`~collections.Sequence`</span>
+<span class="sd">    :param kwargs: Named options to pass to ``command``.</span>
+<span class="sd">    :type kwargs: :class:`dict`</span>
+
+<span class="sd">    :return:</span>
+<span class="sd">      Standard output from running the command, as a list (split by line).</span>
+<span class="sd">    :rtype:</span>
+<span class="sd">      :class:`list` of :class:`str`</span>
+
+<span class="sd">    :raises: :class:`.CommandError` if the command exits with non-zero status.</span>
+
+<span class="sd">    This executes the specified ``svn`` command and returns the standard output</span>
+<span class="sd">    from the execution. See :func:`.buildProcessArgs` for an explanation of how</span>
+<span class="sd">    ``args`` and ``kwargs`` are processed.</span>
+
+<span class="sd">    .. seealso:: :func:`.buildProcessArgs`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;svn&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">]</span> <span class="o">+</span> <span class="n">buildProcessArgs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wc_root</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wc_root</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">cwd</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+    <span class="c"># Raise exception if process failed</span>
+    <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+
+    <span class="c"># Strip trailing newline(s)</span>
+    <span class="k">while</span> <span class="n">out</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">):</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+
+  <span class="c">#---------------------------------------------------------------------------</span></div>
+<div class="viewcode-block" id="Client.info"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Subversion.Client.info">[docs]</a>  <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return information about the specified item.</span>
+
+<span class="sd">    :type args: :class:`basestring`</span>
+<span class="sd">    :param args: Arguments to pass to ``svn info``.</span>
+<span class="sd">    :type args: :class:`~collections.Sequence`</span>
+<span class="sd">    :param kwargs: Named options to pass to ``svn info``.</span>
+<span class="sd">    :type kwargs: :class:`dict`</span>
+
+<span class="sd">    :return: Mapping of information fields returned by ``svn info``.</span>
+<span class="sd">    :rtype: :class:`dict` of :class:`str` |rarr| :class:`str`</span>
+
+<span class="sd">    :raises: :class:`.CommandError` if the command exits with non-zero status.</span>
+
+<span class="sd">    This wraps the ``svn info`` command, returning the resulting information as</span>
+<span class="sd">    a :class:`dict`. The dictionary keys are the value names as printed by</span>
+<span class="sd">    ``svn info``.</span>
+
+<span class="sd">    .. |rarr| unicode:: U+02192 .. right arrow</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&quot;info&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+      <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;: &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="n">result</span><span class="p">[</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c">#=============================================================================</span></div></div>
+<div class="viewcode-block" id="Repository"><a class="viewcode-back" href="../../SlicerWizard.html#SlicerWizard.Subversion.Repository">[docs]</a><span class="k">class</span> <span class="nc">Repository</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Abstract representation of a subversion repository.</span>
+
+<span class="sd">  .. attribute:: url</span>
+
+<span class="sd">    The remote URL of the base of the working copy checkout.</span>
+
+<span class="sd">  .. attribute:: root_url</span>
+
+<span class="sd">    The root URL of the remote repository.</span>
+
+<span class="sd">  .. attribute:: uuid</span>
+
+<span class="sd">    The universally unique identifier of the repository.</span>
+
+<span class="sd">  .. attribute:: wc_root</span>
+
+<span class="sd">    The absolute path to the top level directory of the repository working copy.</span>
+
+<span class="sd">  .. attribute:: revision</span>
+
+<span class="sd">    The revision at which the working copy is checked out.</span>
+
+<span class="sd">  .. attribute:: last_change_revision</span>
+
+<span class="sd">    The last revision which contains a change to content contained in the</span>
+<span class="sd">    working copy.</span>
+
+<span class="sd">  .. attribute:: svn_dir</span>
+
+<span class="sd">    The absolute path to the working copy ``.svn`` directory.</span>
+
+<span class="sd">  .. attribute:: client</span>
+
+<span class="sd">    A :class:`.Client` object which may be used to interact with the repository.</span>
+<span class="sd">    The client interprets non-absolute paths as relative to the working copy</span>
+<span class="sd">    root.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="c">#---------------------------------------------------------------------------</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param path: Location of the repository checkout.</span>
+<span class="sd">    :type path: :class:`basestring`</span>
+
+<span class="sd">    :raises:</span>
+<span class="sd">      * :exc:`.CommandError` if the request to get the repository information</span>
+<span class="sd">        fails (e.g. if ``path`` is not a repository).</span>
+<span class="sd">      * :exc:`~exceptions.KeyError` if the repository information is missing a</span>
+<span class="sd">        required value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s">&quot;Working Copy Root Path&quot;</span><span class="p">])</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s">&quot;URL&quot;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">root_url</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s">&quot;Repository Root&quot;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s">&quot;Repository UUID&quot;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">wc_root</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s">&quot;Working Copy Root Path&quot;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">revision</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s">&quot;Revision&quot;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">last_change_revision</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s">&quot;Last Changed Rev&quot;</span><span class="p">]</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">svn_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wc_root</span><span class="p">,</span> <span class="s">&quot;.svn&quot;</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">SlicerWizard 4.3 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../SlicerWizard.html" >SlicerWizard</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kitware.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
