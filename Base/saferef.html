@@ -1,0 +1,210 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>saferef Module &mdash; Slicer 4.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '4.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Slicer 4.3 documentation" href="index.html" />
+    <link rel="next" title="sitkUtils Module" href="sitkUtils.html" />
+    <link rel="prev" title="mrmlcli Module" href="mrmlcli.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sitkUtils.html" title="sitkUtils Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mrmlcli.html" title="mrmlcli Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Slicer 4.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-saferef">
+<span id="saferef-module"></span><h1>saferef Module<a class="headerlink" href="#module-saferef" title="Permalink to this headline">¶</a></h1>
+<p>&#8220;Safe weakrefs&#8221;, originally from pyDispatcher.</p>
+<p>Provides a way to safely weakref any function, including bound methods (which
+aren&#8217;t handled by the core weakref module).</p>
+<dl class="class">
+<dt id="saferef.BoundMethodWeakref">
+<em class="property">class </em><tt class="descclassname">saferef.</tt><tt class="descname">BoundMethodWeakref</tt><big>(</big><em>target</em>, <em>onDelete=None</em><big>)</big><a class="reference internal" href="_modules/saferef.html#BoundMethodWeakref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saferef.BoundMethodWeakref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>&#8216;Safe&#8217; and reusable weak references to instance methods</p>
+<p>BoundMethodWeakref objects provide a mechanism for
+referencing a bound method without requiring that the
+method object itself (which is normally a transient
+object) is kept alive.  Instead, the BoundMethodWeakref
+object keeps weak references to both the object and the
+function which together define the instance method.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first docutils">
+<dt>key &#8211; the identity key for the reference, calculated</dt>
+<dd>by the class&#8217;s calculateKey method applied to the
+target instance method</dd>
+<dt>deletionMethods &#8211; sequence of callable objects taking</dt>
+<dd>single argument, a reference to this object which
+will be called when <em>either</em> the target object or
+target function is garbage collected (i.e. when
+this object becomes invalid).  These are specified
+as the onDelete parameters of safeRef calls.</dd>
+</dl>
+<p class="last">weakSelf &#8211; weak reference to the target object
+weakFunc &#8211; weak reference to the target function</p>
+</dd>
+<dt>Class Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>_allInstances &#8211; class attribute pointing to all live</dt>
+<dd>BoundMethodWeakref objects indexed by the class&#8217;s
+calculateKey(target) method applied to the target
+objects.  This weak value dictionary is used to
+short-circuit creation so that multiple references
+to the same (object, function) pair produce the
+same BoundMethodWeakref instance.</dd>
+</dl>
+</dd>
+</dl>
+<dl class="classmethod">
+<dt id="saferef.BoundMethodWeakref.calculateKey">
+<em class="property">classmethod </em><tt class="descname">calculateKey</tt><big>(</big><em>target</em><big>)</big><a class="reference internal" href="_modules/saferef.html#BoundMethodWeakref.calculateKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saferef.BoundMethodWeakref.calculateKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the reference key for this reference</p>
+<p>Currently this is a two-tuple of the id()&#8217;s of the
+target object and the target function respectively.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="saferef.BoundNonDescriptorMethodWeakref">
+<em class="property">class </em><tt class="descclassname">saferef.</tt><tt class="descname">BoundNonDescriptorMethodWeakref</tt><big>(</big><em>target</em>, <em>onDelete=None</em><big>)</big><a class="reference internal" href="_modules/saferef.html#BoundNonDescriptorMethodWeakref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saferef.BoundNonDescriptorMethodWeakref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#saferef.BoundMethodWeakref" title="saferef.BoundMethodWeakref"><tt class="xref py py-class docutils literal"><span class="pre">saferef.BoundMethodWeakref</span></tt></a></p>
+<p>A specialized BoundMethodWeakref, for platforms where instance methods
+are not descriptors.</p>
+<p>It assumes that the function name and the target attribute name are the
+same, instead of assuming that the function is a descriptor. This approach
+is equally fast, but not 100% reliable because functions can be stored on an
+attribute named differenty than the function&#8217;s name such as in:</p>
+<p>class A: pass
+def foo(self): return &#8220;foo&#8221;
+A.bar = foo</p>
+<p>But this shouldn&#8217;t be a common use case. So, on platforms where methods
+aren&#8217;t descriptors (such as Jython) this implementation has the advantage
+of working in the most cases.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="saferef.get_bound_method_weakref">
+<tt class="descclassname">saferef.</tt><tt class="descname">get_bound_method_weakref</tt><big>(</big><em>target</em>, <em>onDelete</em><big>)</big><a class="reference internal" href="_modules/saferef.html#get_bound_method_weakref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saferef.get_bound_method_weakref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiates the appropiate BoundMethodWeakRef, depending on the details of
+the underlying class method implementation</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="saferef.safeRef">
+<tt class="descclassname">saferef.</tt><tt class="descname">safeRef</tt><big>(</big><em>target</em>, <em>onDelete=None</em><big>)</big><a class="reference internal" href="_modules/saferef.html#safeRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saferef.safeRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <em>safe</em> weak reference to a callable target</p>
+<dl class="docutils">
+<dt>target &#8211; the object to be weakly referenced, if it&#8217;s a</dt>
+<dd>bound method reference, will create a BoundMethodWeakref,
+otherwise creates a simple weakref.</dd>
+<dt>onDelete &#8211; if provided, will have a hard reference stored</dt>
+<dd>to the callable to be called after the safe reference
+goes out of scope with the reference object, (either a
+weakref or a BoundMethodWeakref) as argument.</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mrmlcli.html"
+                        title="previous chapter">mrmlcli Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sitkUtils.html"
+                        title="next chapter">sitkUtils Module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/saferef.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sitkUtils.html" title="sitkUtils Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mrmlcli.html" title="mrmlcli Module"
+             >previous</a> |</li>
+        <li><a href="index.html">Slicer 4.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kitware.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

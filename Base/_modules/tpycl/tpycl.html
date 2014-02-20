@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tpycl.tpycl &mdash; Slicer 4.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Slicer 4.3 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Slicer 4.3 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for tpycl.tpycl</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python</span>
+
+<span class="c">#</span>
+<span class="c"># tpycl.py is the python support code to allow calling of python-wrapped</span>
+<span class="c"># vtk code from tcl scripts</span>
+<span class="c">#</span>
+<span class="c"># the main class is tpycl, and scripts can </span>
+<span class="c">#</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;sphinx&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">Tkinter</span>
+  <span class="kn">from</span> <span class="nn">__main__</span> <span class="kn">import</span> <span class="n">slicer</span>
+  <span class="kn">import</span> <span class="nn">qt</span>
+
+<div class="viewcode-block" id="tpycl"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl">[docs]</a><span class="k">class</span> <span class="nc">tpycl</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="c"># when python is initialized inside slicer there is no argv</span>
+    <span class="c"># so create a fake one if needed</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">argv0</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+      <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span> <span class="o">=</span> <span class="n">Tkinter</span><span class="o">.</span><span class="n">Tcl</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">createcommand</span><span class="p">(</span><span class="s">&quot;py_eval&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_eval</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">createcommand</span><span class="p">(</span><span class="s">&quot;py_package&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_package</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">createcommand</span><span class="p">(</span><span class="s">&quot;py_type&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_type</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">createcommand</span><span class="p">(</span><span class="s">&quot;py_del&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_del</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">createcommand</span><span class="p">(</span><span class="s">&quot;py_puts&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_puts</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">createcommand</span><span class="p">(</span><span class="s">&quot;py_after&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_after</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">createcommand</span><span class="p">(</span><span class="s">&quot;py_vtkInstanceName&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_vtkInstanceName</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">timer</span> <span class="o">=</span> <span class="n">qt</span><span class="o">.</span><span class="n">QTimer</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">setSingleShot</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">setInterval</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;timeout()&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">after_callback</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s">&#39;win32&#39;</span><span class="p">:</span>
+      <span class="c"># Update environment variables set by application - unlike other platforms,</span>
+      <span class="c"># on windows this does not happen automatically so we do it here</span>
+      <span class="c"># Note that subsquent env changes will not be reflected</span>
+      <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tcl_putenv</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="c"># This path is Slicer-specific</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s">&#39;source &quot;</span><span class="si">%s</span><span class="s">/bin/Python/tpycl/tpycl.tcl&quot;&#39;</span> <span class="o">%</span> <span class="n">slicer</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">slicerHome</span><span class="p">)</span>
+
+<div class="viewcode-block" id="tpycl.usage"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.usage">[docs]</a>  <span class="k">def</span> <span class="nf">usage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&quot;tpycl [options] [file.tcl] [arg] [arg]&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;-v --verbose : debugging info while parsing&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;-h --help : extra help info&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;tpycl is a tcl shell implemented in python that&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;allows you to import and execute python code from&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;inside tcl (hence the name - an homage to jcw&#39;s typcl which&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;allows you to call tcl from python).&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;Not all python constructs supported, but tpycl should be&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;adequate to call many packages.&quot;</span>
+    <span class="nb">exit</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="tpycl.dprint"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.dprint">[docs]</a>  <span class="k">def</span> <span class="nf">dprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; debug print &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">arg</span><span class="p">,</span>
+      <span class="k">print</span> <span class="s">&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="tpycl.py_package"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.py_package">[docs]</a>  <span class="k">def</span> <span class="nf">py_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packageName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; imports a vtk-wrapped python package </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dprint</span> <span class="p">(</span><span class="s">&quot;importing </span><span class="si">%s</span><span class="s"> as a package&quot;</span> <span class="o">%</span> <span class="n">packageName</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">packageName</span> <span class="o">==</span> <span class="s">&#39;vtk&#39;</span><span class="p">:</span>
+      <span class="kn">import</span> <span class="nn">vtk</span>
+      <span class="nb">globals</span><span class="p">()[</span><span class="n">packageName</span><span class="p">]</span> <span class="o">=</span> <span class="n">vtk</span>
+      <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">vtk</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s">&quot;::tpycl::registerClass </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">packageName</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="p">)</span>
+      <span class="k">return</span>
+
+    <span class="n">package</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">packageName</span><span class="p">]</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">packageName</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s">&quot;::tpycl::registerClass </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">packageName</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="tpycl.py_type"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.py_type">[docs]</a>  <span class="k">def</span> <span class="nf">py_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; return true if the string represents a valid python type</span>
+<span class="sd">        such as an int or an instanced variable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="k">exec</span><span class="p">(</span> <span class="s">&quot;type(</span><span class="si">%s</span><span class="s">)&quot;</span><span class="o">%</span><span class="n">string</span><span class="p">,</span> <span class="nb">globals</span><span class="p">()</span> <span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+      <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</div>
+<div class="viewcode-block" id="tpycl.py_vtkInstanceName"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.py_vtkInstanceName">[docs]</a>  <span class="k">def</span> <span class="nf">py_vtkInstanceName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">instance</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; make a unique name for an instance using the classname and</span>
+<span class="sd">    pointer in hex</span>
+<span class="sd">    - assumes the string form of the instance will end with hex</span>
+<span class="sd">      encoding of the pointer, for example: &#39;(vtkImageData)0x2a9a750&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># used to work with vtk 5.6</span>
+    <span class="c">#return &quot;%s%s&quot; % (instance.GetClassName(), repr(instance).split()[-1][:-1])</span>
+    <span class="c"># now just strip off the parens</span>
+    <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="tpycl.py_del"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.py_del">[docs]</a>  <span class="k">def</span> <span class="nf">py_del</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">instanceName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; deletes a named instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c"># only delete if the instanceName exists</span>
+    <span class="k">if</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">instanceName</span><span class="p">):</span>
+      <span class="k">exec</span><span class="p">(</span> <span class="s">&quot;del(</span><span class="si">%s</span><span class="s">)&quot;</span><span class="o">%</span><span class="n">instanceName</span><span class="p">,</span> <span class="nb">globals</span><span class="p">()</span> <span class="p">)</span>
+        
+    <span class="k">return</span> <span class="bp">None</span>
+</div>
+<div class="viewcode-block" id="tpycl.py_puts"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.py_puts">[docs]</a>  <span class="k">def</span> <span class="nf">py_puts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noNewLine</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; print into the python shell</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">noNewLine</span> <span class="o">==</span> <span class="s">&quot;0&quot;</span><span class="p">:</span>
+      <span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="tpycl.py_after"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.py_after">[docs]</a>  <span class="k">def</span> <span class="nf">py_after</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; sets the QTimer to call the callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    </div>
+<div class="viewcode-block" id="tpycl.after_callback"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.after_callback">[docs]</a>  <span class="k">def</span> <span class="nf">after_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; what gets called when the after timeout happens</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s">&#39;::after_callback&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">timer</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    </div>
+<div class="viewcode-block" id="tpycl.py_eval"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.py_eval">[docs]</a>  <span class="k">def</span> <span class="nf">py_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">cmd</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; evaluated the python command string and returns the result</span>
+<span class="sd">    - if the result is a vtk object instance, it is registered in the tcl interp</span>
+<span class="sd">    - if the result is a tuple, it is converted to a tcl-style list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s">&quot;__tpycl_result = &quot;</span> <span class="o">+</span> <span class="n">cmd</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="k">exec</span><span class="p">(</span> <span class="n">cmd</span><span class="p">,</span> <span class="nb">globals</span><span class="p">()</span> <span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+      <span class="k">print</span><span class="p">(</span> <span class="s">&quot;Error executing </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">cmd</span> <span class="p">)</span>
+      <span class="k">print</span><span class="p">(</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span> <span class="p">)</span>
+      <span class="k">raise</span>
+    <span class="n">evalResult</span> <span class="o">=</span>  <span class="nb">globals</span><span class="p">()[</span><span class="s">&quot;__tpycl_result&quot;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">evalResult</span><span class="o">.</span><span class="n">IsA</span><span class="p">(</span><span class="s">&quot;vtkObject&quot;</span><span class="p">):</span>
+        <span class="n">instanceName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">py_vtkInstanceName</span><span class="p">(</span><span class="n">evalResult</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcl_eval</span><span class="p">(</span><span class="s">&quot;info command </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">instanceName</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+          <span class="k">exec</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> = globals()[&#39;__tpycl_result&#39;]&quot;</span> <span class="o">%</span> <span class="n">instanceName</span><span class="p">,</span> <span class="nb">globals</span><span class="p">())</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">tcl_eval</span><span class="p">(</span> <span class="s">&quot;proc ::</span><span class="si">%s</span><span class="s"> {args} {tpycl::methodCaller </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s"> $args}&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">instanceName</span><span class="p">,</span> <span class="n">instanceName</span><span class="p">,</span> <span class="n">instanceName</span><span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span><span class="p">(</span> <span class="n">instanceName</span> <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+      <span class="k">pass</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">evalResult</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;tuple&#39;</span><span class="p">:</span>
+        <span class="n">returnValue</span> <span class="o">=</span> <span class="n">evalResult</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">evalResult</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+          <span class="n">returnValue</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">returnValue</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">(</span> <span class="n">returnValue</span> <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+      <span class="k">pass</span>
+    <span class="k">return</span><span class="p">(</span> <span class="nb">repr</span><span class="p">(</span><span class="n">evalResult</span><span class="p">)</span> <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="tpycl.tcl_callback"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.tcl_callback">[docs]</a>  <span class="k">def</span> <span class="nf">tcl_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; evaluate tcl code string but don&#39;t return the result</span>
+<span class="sd">    (only prints error messages)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dprint</span><span class="p">(</span><span class="s">&quot;callback command is &lt;</span><span class="si">%s</span><span class="s">&gt;&quot;</span> <span class="o">%</span> <span class="n">cmd</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Tkinter</span><span class="o">.</span><span class="n">TclError</span><span class="p">,</span><span class="n">error</span><span class="p">:</span>
+      <span class="k">print</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span>
+      <span class="n">errorInfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s">&quot;set ::errorInfo&quot;</span><span class="p">)</span>
+      <span class="k">print</span> <span class="p">(</span><span class="n">errorInfo</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="tpycl.tcl_eval"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.tcl_eval">[docs]</a>  <span class="k">def</span> <span class="nf">tcl_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; evaluate tcl code string and return the result</span>
+<span class="sd">    - py_package is a special string to import python code into tcl</span>
+<span class="sd">    - py_eval goes back from tcl into python</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dprint</span><span class="p">(</span><span class="s">&quot;command is &lt;</span><span class="si">%s</span><span class="s">&gt;&quot;</span> <span class="o">%</span> <span class="n">cmd</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cmd</span> <span class="o">==</span> <span class="s">&#39;exit&#39;</span><span class="p">:</span>
+      <span class="nb">exit</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cmd</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;py_package &quot;</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">py_package</span><span class="p">(</span> <span class="n">cmd</span><span class="p">[</span><span class="mi">10</span><span class="p">:]</span> <span class="p">)</span>
+      <span class="k">return</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cmd</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;py_eval &quot;</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">py_eval</span><span class="p">(</span> <span class="n">cmd</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="s">&quot;py_eval &quot;</span><span class="p">):]</span> <span class="p">)</span>
+      <span class="k">return</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Tkinter</span><span class="o">.</span><span class="n">TclError</span><span class="p">,</span><span class="n">error</span><span class="p">:</span>
+      <span class="k">print</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span>
+      <span class="n">errorInfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s">&quot;set ::errorInfo&quot;</span><span class="p">)</span>
+      <span class="k">print</span> <span class="p">(</span><span class="n">errorInfo</span><span class="p">)</span>
+      <span class="k">return</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="tpycl.tcl_putenv"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.tcl_putenv">[docs]</a>  <span class="k">def</span> <span class="nf">tcl_putenv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Set environment variable</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tcl</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="s">&quot;global env; set env(</span><span class="si">%s</span><span class="s">) </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="tpycl.main"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.main">[docs]</a>  <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">argv</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; main loop for the interpreter shell</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># parse command line options</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="n">argv</span> <span class="o">!=</span> <span class="p">[]:</span>
+      <span class="n">arg</span> <span class="o">=</span> <span class="n">argv</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">arg</span> <span class="o">==</span> <span class="s">&quot;-v&quot;</span> <span class="ow">or</span> <span class="n">arg</span> <span class="o">==</span> <span class="s">&quot;--verbose&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">continue</span>
+      <span class="k">if</span> <span class="n">arg</span> <span class="o">==</span> <span class="s">&quot;-h&quot;</span> <span class="ow">or</span> <span class="n">arg</span> <span class="o">==</span> <span class="s">&quot;--help&quot;</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">usage</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">arg</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dprint</span><span class="p">(</span><span class="s">&quot;file&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dprint</span><span class="p">(</span><span class="s">&quot;args&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="c"># if given a file, run it</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+      <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+      <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">cmd</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+          <span class="k">break</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tcl_eval</span><span class="p">(</span> <span class="n">cmd</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+
+    <span class="c"># evaluate stdin until eof</span>
+    <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="s">&quot;% &quot;</span> <span class="p">)</span>
+      <span class="n">cmd</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">readline</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+      <span class="k">if</span> <span class="n">cmd</span> <span class="o">!=</span> <span class="s">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tcl_eval</span><span class="p">(</span> <span class="n">cmd</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+          <span class="k">print</span> <span class="n">result</span>
+</div></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+  <span class="n">tp</span> <span class="o">=</span> <span class="n">tpycl</span><span class="p">()</span>
+  <span class="n">tp</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Slicer 4.3 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kitware.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

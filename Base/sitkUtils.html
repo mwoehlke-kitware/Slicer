@@ -1,0 +1,205 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>sitkUtils Module &mdash; Slicer 4.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '4.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Slicer 4.3 documentation" href="index.html" />
+    <link rel="next" title="teem Module" href="teem.html" />
+    <link rel="prev" title="saferef Module" href="saferef.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="teem.html" title="teem Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="saferef.html" title="saferef Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Slicer 4.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-sitkUtils">
+<span id="sitkutils-module"></span><h1>sitkUtils Module<a class="headerlink" href="#module-sitkUtils" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="sitkUtils.AddNodeToMRMLScene">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">AddNodeToMRMLScene</tt><big>(</big><em>newNode</em>, <em>nodeName='default'</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#AddNodeToMRMLScene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.AddNodeToMRMLScene" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.CloneSlicerNode">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">CloneSlicerNode</tt><big>(</big><em>NodeName</em>, <em>NewNodeNamePrefix</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#CloneSlicerNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.CloneSlicerNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new node in slicer by cloning
+from an exising node.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.CreateNewDisplayNode">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">CreateNewDisplayNode</tt><big>(</big><em>nodeName='default'</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#CreateNewDisplayNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.CreateNewDisplayNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new node from scratch</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.CreateNewVolumeNode">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">CreateNewVolumeNode</tt><big>(</big><em>nodeName</em>, <em>nodeType='vtkMRMLScalarVolumeNode'</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#CreateNewVolumeNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.CreateNewVolumeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new node from scratch</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.EnsureRegistration">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">EnsureRegistration</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#EnsureRegistration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.EnsureRegistration" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a complete hack, but attempting to read
+a dummy file with AddArchetypeVolume
+has a side effect of registering
+the MRMLImageIO file reader.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.GetSlicerITKReadWriteAddress">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">GetSlicerITKReadWriteAddress</tt><big>(</big><em>NodeName</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#GetSlicerITKReadWriteAddress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.GetSlicerITKReadWriteAddress" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will return the ITK FileIO formatted text address
+so that the image can be read directly from the MRML scene</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.PullFromSlicer">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">PullFromSlicer</tt><big>(</big><em>NodeName</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#PullFromSlicer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.PullFromSlicer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a slicer MRML image name, return the SimpleITK
+image object.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.PushBackground">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">PushBackground</tt><big>(</big><em>sitkImage</em>, <em>nodeName</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#PushBackground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.PushBackground" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.PushForeground">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">PushForeground</tt><big>(</big><em>sitkImage</em>, <em>nodeName</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#PushForeground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.PushForeground" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.PushLabel">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">PushLabel</tt><big>(</big><em>sitkImage</em>, <em>nodeName</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#PushLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.PushLabel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.PushToSlicer">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">PushToSlicer</tt><big>(</big><em>sitkimage</em>, <em>NodeName</em>, <em>compositeView=0</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#PushToSlicer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.PushToSlicer" title="Permalink to this definition">¶</a></dt>
+<dd><p>bit 0: Set as background image
+bit 1: Set as foreground image
+bit 2: Set as label image</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.checkVolumeNodeType">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">checkVolumeNodeType</tt><big>(</big><em>nodeType</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#checkVolumeNodeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.checkVolumeNodeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise an error if the node type is not a recognized volume node</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.removeOldMRMLNode">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">removeOldMRMLNode</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#removeOldMRMLNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.removeOldMRMLNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrite a MRML node with the same name and class as the given node</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sitkUtils.slicerNotes_UnitTest">
+<tt class="descclassname">sitkUtils.</tt><tt class="descname">slicerNotes_UnitTest</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#slicerNotes_UnitTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.slicerNotes_UnitTest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="saferef.html"
+                        title="previous chapter">saferef Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="teem.html"
+                        title="next chapter">teem Module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/sitkUtils.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="teem.html" title="teem Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="saferef.html" title="saferef Module"
+             >previous</a> |</li>
+        <li><a href="index.html">Slicer 4.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kitware.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
