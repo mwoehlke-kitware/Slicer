@@ -16,6 +16,7 @@ set(Slicer_PYTHON_SCRIPTS
   vtkITK
   )
 
+# Keep this list in sync with __init__.py
 set(Slicer_PYTHON_MODULES_CONFIG "
 # slicer libs
 'freesurfer',

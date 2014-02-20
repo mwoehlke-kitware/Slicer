@@ -1,7 +1,10 @@
+import sys
+
 import slicer
-import ctk
-import vtk
-import SimpleITK as sitk
+if not 'sphinx' in sys.modules:
+  import ctk
+  import vtk
+  import SimpleITK as sitk
 
 ## This assumes that you have already loaded the 'MRHead1' data from the informatics module.
 def GetSlicerITKReadWriteAddress( NodeName ):

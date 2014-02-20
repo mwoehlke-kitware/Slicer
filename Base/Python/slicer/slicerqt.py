@@ -1,4 +1,10 @@
-import vtk, qt, ctk
+import sys
+import vtk
+
+if not 'sphinx' in sys.modules:
+  import qt
+  import ctk
+
 import slicer
 
 from slicer.util import *
@@ -95,5 +101,5 @@ class _Internal():
     if moduleName == 'DWIConvert':
       setattr( slicer.modules, 'dicomtonrrdconverter', moduleManager.module(moduleName) )
 
-
-_internalInstance = _Internal()
+if not 'sphinx' in sys.modules:
+  _internalInstance = _Internal()

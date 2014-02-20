@@ -9,9 +9,11 @@
 
 import sys
 import os
-import Tkinter
-from __main__ import slicer
-import qt
+
+if not 'sphinx' in sys.modules:
+  import Tkinter
+  from __main__ import slicer
+  import qt
 
 class tpycl(object):
 
