@@ -50,8 +50,35 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="slicerwizard-package">
-<h1>1. SlicerWizard Package<a class="headerlink" href="#slicerwizard-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-SlicerWizard">
+<span id="slicerwizard-package"></span><h1>1. SlicerWizard Package<a class="headerlink" href="#module-SlicerWizard" title="Permalink to this headline">¶</a></h1>
+<p>Python utilities for automating Slicer development tasks.</p>
+<p>This package provides a suite of tools to help automate certain tasks that are
+often performed when developing code and extensions for Slicer.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This documentation is intended for developers working           on such tools. Users of the same should refer to the           <a class="reference external" href="http://wiki.slicer.org/slicerWiki/index.php/Documentation/Nightly/Developers/ExtensionWizard">Extension Wizard</a>           documentation on the Slicer wiki.</p>
+</div>
+<ul class="simple">
+<li><a class="reference internal" href="#module-SlicerWizard.CMakeParser" title="SlicerWizard.CMakeParser"><tt class="xref py py-mod docutils literal"><span class="pre">CMakeParser</span></tt></a>:
+Utilities for symbolic manipulation of CMake scripts.</li>
+<li><a class="reference internal" href="#SlicerWizard.ExtensionDescription" title="SlicerWizard.ExtensionDescription"><tt class="xref py py-class docutils literal"><span class="pre">ExtensionDescription</span></tt></a>:
+Representation of an extension description.</li>
+<li><a class="reference internal" href="#SlicerWizard.ExtensionProject" title="SlicerWizard.ExtensionProject"><tt class="xref py py-class docutils literal"><span class="pre">ExtensionProject</span></tt></a>:
+Convenience class for manipulating an extension project.</li>
+<li><a class="reference internal" href="#SlicerWizard.ExtensionWizard" title="SlicerWizard.ExtensionWizard"><tt class="xref py py-class docutils literal"><span class="pre">ExtensionWizard</span></tt></a>:
+Implementation class for the Extension Wizard.</li>
+<li><a class="reference internal" href="#module-SlicerWizard.GithubHelper" title="SlicerWizard.GithubHelper"><tt class="xref py py-mod docutils literal"><span class="pre">GithubHelper</span></tt></a>:
+Helpers for interacting with github.</li>
+<li><a class="reference internal" href="#module-SlicerWizard.Subversion" title="SlicerWizard.Subversion"><tt class="xref py py-mod docutils literal"><span class="pre">Subversion</span></tt></a>:
+Python API for simple interaction with Subversion.</li>
+<li><a class="reference internal" href="#SlicerWizard.TemplateManager" title="SlicerWizard.TemplateManager"><tt class="xref py py-class docutils literal"><span class="pre">TemplateManager</span></tt></a>:
+Template collection manager.</li>
+<li><a class="reference internal" href="#module-SlicerWizard.Utilities" title="SlicerWizard.Utilities"><tt class="xref py py-mod docutils literal"><span class="pre">Utilities</span></tt></a>:
+Helpers for interacting with <abbr title="Command Line Interface">CLI</abbr> users and <abbr title="Version Control System">VCS</abbr> tools.</li>
+<li><a class="reference internal" href="#SlicerWizard.WizardHelpFormatter" title="SlicerWizard.WizardHelpFormatter"><tt class="xref py py-class docutils literal"><span class="pre">WizardHelpFormatter</span></tt></a>:
+Custom formatter for <abbr title="Command Line Interface">CLI</abbr> arguments.</li>
+</ul>
 <div class="section" id="module-SlicerWizard.CMakeParser">
 <span id="cmakeparser-module"></span><h2>1.1. <tt class="xref py py-mod docutils literal"><span class="pre">CMakeParser</span></tt> Module<a class="headerlink" href="#module-SlicerWizard.CMakeParser" title="Permalink to this headline">¶</a></h2>
 <p>Symbolic manipulation of CMake scripts.</p>
@@ -836,7 +863,7 @@ matching requests exist, the first matching request is returned.</p>
 </div>
 <div class="section" id="module-SlicerWizard.Subversion">
 <span id="subversion-module"></span><h2>1.6. <tt class="xref py py-mod docutils literal"><span class="pre">Subversion</span></tt> Module<a class="headerlink" href="#module-SlicerWizard.Subversion" title="Permalink to this headline">¶</a></h2>
-<p>Helpers for interacting with git.</p>
+<p>Python API for simple interaction with Subversion.</p>
 <dl class="class">
 <dt id="SlicerWizard.Subversion.Client">
 <em class="property">class </em><tt class="descclassname">SlicerWizard.Subversion.</tt><tt class="descname">Client</tt><big>(</big><em>repo=None</em><big>)</big><a class="reference internal" href="_modules/SlicerWizard/Subversion.html#Client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#SlicerWizard.Subversion.Client" title="Permalink to this definition">¶</a></dt>
@@ -1481,7 +1508,7 @@ or <tt class="docutils literal"><span class="pre">.svn</span></tt> directory.</p
 <dt id="SlicerWizard.WizardHelpFormatter">
 <em class="property">class </em><tt class="descclassname">SlicerWizard.</tt><tt class="descname">WizardHelpFormatter</tt><big>(</big><em>prog</em>, <em>indent_increment=2</em>, <em>max_help_position=24</em>, <em>width=None</em><big>)</big><a class="headerlink" href="#SlicerWizard.WizardHelpFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">argparse.HelpFormatter</span></tt></p>
-<p>Custom formatter for ExtensionWizard <abbr title="Command Line Interface">CLI</abbr> arguments.</p>
+<p>Custom formatter for <abbr title="Command Line Interface">CLI</abbr> arguments.</p>
 <p>This formatter overrides <tt class="xref py py-class docutils literal"><span class="pre">argparse.HelpFormatter</span></tt> in order to replace
 occurrences of the &#8216;&lt;&#8217; and &#8216;&gt;&#8217; characters with &#8216;[&#8216; and &#8216;]&#8217;, respectively.
 This is done to work around the formatter&#8217;s wrapping, which tries to break

@@ -49,6 +49,47 @@
           <div class="body">
             
   <h1>Source code for SlicerWizard</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Python utilities for automating Slicer development tasks.</span>
+
+<span class="sd">This package provides a suite of tools to help automate certain tasks that are</span>
+<span class="sd">often performed when developing code and extensions for Slicer.</span>
+
+<span class="sd">.. &#39;note&#39; directive needs &#39;\&#39; to span multiple lines!</span>
+<span class="sd">.. note:: This documentation is intended for developers working \</span>
+<span class="sd">          on such tools. Users of the same should refer to the \</span>
+<span class="sd">          :wikidoc:`Developers/ExtensionWizard Extension Wizard` \</span>
+<span class="sd">          documentation on the Slicer wiki.</span>
+
+<span class="sd">* :mod:`.CMakeParser`:</span>
+<span class="sd">  Utilities for symbolic manipulation of CMake scripts.</span>
+
+<span class="sd">* :class:`.ExtensionDescription`:</span>
+<span class="sd">  Representation of an extension description.</span>
+
+<span class="sd">* :class:`.ExtensionProject`:</span>
+<span class="sd">  Convenience class for manipulating an extension project.</span>
+
+<span class="sd">* :class:`.ExtensionWizard`:</span>
+<span class="sd">  Implementation class for the Extension Wizard.</span>
+
+<span class="sd">* :mod:`.GithubHelper`:</span>
+<span class="sd">  Helpers for interacting with github.</span>
+
+<span class="sd">* :mod:`.Subversion`:</span>
+<span class="sd">  Python API for simple interaction with Subversion.</span>
+
+<span class="sd">* :class:`.TemplateManager`:</span>
+<span class="sd">  Template collection manager.</span>
+
+<span class="sd">* :mod:`.Utilities`:</span>
+<span class="sd">  Helpers for interacting with |CLI| users and |VCS| tools.</span>
+
+<span class="sd">* :class:`.WizardHelpFormatter`:</span>
+<span class="sd">  Custom formatter for |CLI| arguments.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.__version__</span> <span class="kn">import</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">__version_info__</span>
+
 <span class="kn">from</span> <span class="nn">.ExtensionDescription</span> <span class="kn">import</span> <span class="n">ExtensionDescription</span>
 <span class="kn">from</span> <span class="nn">.ExtensionProject</span> <span class="kn">import</span> <span class="n">ExtensionProject</span>
 <span class="kn">from</span> <span class="nn">.ExtensionWizard</span> <span class="kn">import</span> <span class="n">ExtensionWizard</span>
