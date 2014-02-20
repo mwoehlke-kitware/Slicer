@@ -17,6 +17,7 @@ Contents:
    mrmlcli
    saferef
    sitkUtils
+   slicer
    teem
    tpycl
    vtkITK

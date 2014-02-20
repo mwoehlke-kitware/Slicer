@@ -1,0 +1,11 @@
+modulelogic Package
+===================
+
+:mod:`modulelogic` Package
+--------------------------
+
+.. automodule:: slicer.modulelogic
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

@@ -1,0 +1,528 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>slicer.util &mdash; Slicer 4.3 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Slicer 4.3 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Slicer 4.3 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for slicer.util</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="c">#</span>
+<span class="c"># General</span>
+<span class="c">#</span>
+
+<span class="n">EXIT_SUCCESS</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">EXIT_FAILURE</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">quit</span><span class="p">():</span>
+<div class="viewcode-block" id="quit"><a class="viewcode-back" href="../../slicer.html#slicer.util.quit">[docs]</a>  <span class="nb">exit</span><span class="p">(</span><span class="n">EXIT_SUCCESS</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">exit</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">EXIT_SUCCESS</span><span class="p">):</span></div>
+<div class="viewcode-block" id="exit"><a class="viewcode-back" href="../../slicer.html#slicer.util.exit">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">restart</span><span class="p">():</span></div>
+<div class="viewcode-block" id="restart"><a class="viewcode-back" href="../../slicer.html#slicer.util.restart">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">restart</span><span class="p">()</span>
+
+<span class="c">#</span>
+<span class="c"># Custom Import</span>
+<span class="c">#</span>
+
+<span class="k">def</span> <span class="nf">importVTKClassesFromDirectory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">dest_module_name</span><span class="p">,</span> <span class="n">filematch</span> <span class="o">=</span> <span class="s">&#39;*&#39;</span><span class="p">):</span></div>
+<div class="viewcode-block" id="importVTKClassesFromDirectory"><a class="viewcode-back" href="../../slicer.html#slicer.util.importVTKClassesFromDirectory">[docs]</a>  <span class="n">importClassesFromDirectory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">dest_module_name</span><span class="p">,</span> <span class="s">&#39;vtkclass&#39;</span><span class="p">,</span> <span class="n">filematch</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">importQtClassesFromDirectory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">dest_module_name</span><span class="p">,</span> <span class="n">filematch</span> <span class="o">=</span> <span class="s">&#39;*&#39;</span><span class="p">):</span></div>
+<div class="viewcode-block" id="importQtClassesFromDirectory"><a class="viewcode-back" href="../../slicer.html#slicer.util.importQtClassesFromDirectory">[docs]</a>  <span class="n">importClassesFromDirectory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">dest_module_name</span><span class="p">,</span> <span class="s">&#39;PythonQtClassWrapper&#39;</span><span class="p">,</span> <span class="n">filematch</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">importClassesFromDirectory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">dest_module_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">filematch</span> <span class="o">=</span> <span class="s">&#39;*&#39;</span><span class="p">):</span></div>
+<div class="viewcode-block" id="importClassesFromDirectory"><a class="viewcode-back" href="../../slicer.html#slicer.util.importClassesFromDirectory">[docs]</a>  <span class="kn">import</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">fnmatch</span>
+  <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">filematch</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">filematch</span><span class="p">))</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fname</span><span class="p">)):</span>
+      <span class="k">continue</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">from_module_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fname</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="n">importModuleObjects</span><span class="p">(</span><span class="n">from_module_name</span><span class="p">,</span> <span class="n">dest_module_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">detail</span><span class="p">:</span>
+      <span class="kn">import</span> <span class="nn">sys</span>
+      <span class="k">print</span><span class="p">(</span><span class="n">detail</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">importModuleObjects</span><span class="p">(</span><span class="n">from_module_name</span><span class="p">,</span> <span class="n">dest_module_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">):</span></div>
+<div class="viewcode-block" id="importModuleObjects"><a class="viewcode-back" href="../../slicer.html#slicer.util.importModuleObjects">[docs]</a>  <span class="sd">&quot;&quot;&quot;Import object of type &#39;type_name&#39; from module identified</span>
+<span class="sd">  by &#39;from_module_name&#39; into the module identified by &#39;dest_module_name&#39;.&quot;&quot;&quot;</span>
+
+  <span class="c"># Obtain a reference to the module identifed by &#39;dest_module_name&#39;</span>
+  <span class="kn">import</span> <span class="nn">sys</span>
+  <span class="n">dest_module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">dest_module_name</span><span class="p">]</span>
+
+  <span class="k">exec</span> <span class="s">&quot;import </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">from_module_name</span><span class="p">)</span>
+
+  <span class="c"># Obtain a reference to the associated VTK module</span>
+  <span class="n">module</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">from_module_name</span><span class="p">)</span>
+
+  <span class="c"># Loop over content of the python module associated with the given VTK python library</span>
+  <span class="k">for</span> <span class="n">item_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+
+    <span class="c"># Obtain a reference associated with the current object</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">from_module_name</span><span class="p">,</span> <span class="n">item_name</span><span class="p">))</span>
+
+    <span class="c"># Add the object to dest_module_globals_dict if any</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="n">type_name</span><span class="p">:</span>
+      <span class="k">exec</span><span class="p">(</span><span class="s">&quot;from </span><span class="si">%s</span><span class="s"> import </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">from_module_name</span><span class="p">,</span> <span class="n">item_name</span><span class="p">))</span>
+      <span class="k">exec</span><span class="p">(</span><span class="s">&quot;dest_module.</span><span class="si">%s</span><span class="s"> = </span><span class="si">%s</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">item_name</span><span class="p">,</span> <span class="n">item_name</span><span class="p">))</span>
+
+<span class="c">#</span>
+<span class="c"># UI</span>
+<span class="c">#</span>
+
+<span class="k">def</span> <span class="nf">lookupTopLevelWidget</span><span class="p">(</span><span class="n">objectName</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span></div>
+<div class="viewcode-block" id="lookupTopLevelWidget"><a class="viewcode-back" href="../../slicer.html#slicer.util.lookupTopLevelWidget">[docs]</a>  <span class="sd">&quot;&quot;&quot;Loop over all top level widget associated with &#39;slicer.app&#39; and</span>
+<span class="sd">  return the one matching &#39;objectName&#39;&quot;&quot;&quot;</span>
+  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">topLevelWidgets</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s">&#39;objectName&#39;</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">objectName</span> <span class="o">==</span> <span class="n">objectName</span><span class="p">:</span> <span class="k">return</span> <span class="n">w</span>
+  <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Failed to obtain reference to &#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">objectName</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+  <span class="k">return</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">mainWindow</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span></div>
+<div class="viewcode-block" id="mainWindow"><a class="viewcode-back" href="../../slicer.html#slicer.util.mainWindow">[docs]</a>  <span class="k">return</span> <span class="n">lookupTopLevelWidget</span><span class="p">(</span><span class="s">&#39;qSlicerAppMainWindow&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">pythonShell</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span></div>
+<div class="viewcode-block" id="pythonShell"><a class="viewcode-back" href="../../slicer.html#slicer.util.pythonShell">[docs]</a>  <span class="k">return</span> <span class="n">lookupTopLevelWidget</span><span class="p">(</span><span class="s">&#39;pythonConsole&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">showStatusMessage</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">duration</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span></div>
+<div class="viewcode-block" id="showStatusMessage"><a class="viewcode-back" href="../../slicer.html#slicer.util.showStatusMessage">[docs]</a>  <span class="n">mw</span> <span class="o">=</span> <span class="n">mainWindow</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">mw</span><span class="p">:</span>
+    <span class="n">mw</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">findChildren</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="n">text</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="n">className</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span></div>
+<div class="viewcode-block" id="findChildren"><a class="viewcode-back" href="../../slicer.html#slicer.util.findChildren">[docs]</a>  <span class="sd">&quot;&quot;&quot; return a list of child widgets that match the passed name &quot;&quot;&quot;</span>
+  <span class="c"># TODO: figure out why the native QWidget.findChildren method</span>
+  <span class="c"># does not seem to work from PythonQt</span>
+  <span class="kn">import</span> <span class="nn">slicer</span><span class="o">,</span> <span class="nn">fnmatch</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">widget</span><span class="p">:</span>
+    <span class="n">widget</span> <span class="o">=</span> <span class="n">mainWindow</span><span class="p">()</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">widget</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">[]</span>
+  <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">parents</span> <span class="o">=</span> <span class="p">[</span><span class="n">widget</span><span class="p">]</span>
+  <span class="k">while</span> <span class="n">parents</span> <span class="o">!=</span> <span class="p">[]:</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">parents</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+    <span class="c"># sometimes, p is null, f.e. when using --python-script or --python-code</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="p">:</span>
+      <span class="k">break</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="s">&#39;children&#39;</span><span class="p">):</span>
+      <span class="k">continue</span>
+    <span class="n">parents</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">children</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">and</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+      <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">text</span><span class="p">:</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">text</span>
+        <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+          <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+      <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">title</span><span class="p">:</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">title</span>
+        <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+          <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+      <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">className</span><span class="p">:</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">className</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">className</span><span class="p">(),</span> <span class="n">className</span><span class="p">):</span>
+          <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+      <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+  <span class="k">return</span> <span class="n">children</span>
+
+<span class="c">#</span>
+<span class="c"># IO</span>
+<span class="c">#</span>
+
+<span class="k">def</span> <span class="nf">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{},</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadNodeFromFile"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadNodeFromFile">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="kn">from</span> <span class="nn">vtk</span> <span class="kn">import</span> <span class="n">vtkCollection</span>
+  <span class="n">properties</span><span class="p">[</span><span class="s">&#39;fileName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
+
+  <span class="k">if</span> <span class="n">returnNode</span><span class="p">:</span>
+      <span class="n">loadedNodes</span> <span class="o">=</span> <span class="n">vtkCollection</span><span class="p">()</span>
+      <span class="n">success</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">loadNodes</span><span class="p">(</span><span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">loadedNodes</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">loadedNodes</span><span class="o">.</span><span class="n">GetItemAsObject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+      <span class="n">success</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">loadNodes</span><span class="p">(</span><span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">success</span>
+
+<span class="k">def</span> <span class="nf">loadColorTable</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadColorTable"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadColorTable">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;ColorTableFile&#39;</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="p">{},</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadFiberBundle</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadFiberBundle"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadFiberBundle">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;FiberBundleFile&#39;</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="p">{},</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadFiducialList</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadFiducialList"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadFiducialList">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;FiducialListFile&#39;</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="p">{},</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadAnnotationFiducial</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadAnnotationFiducial"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadAnnotationFiducial">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;AnnotationFile&#39;</span>
+  <span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="n">properties</span><span class="p">[</span><span class="s">&#39;fiducial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadMarkupsFiducialList</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadMarkupsFiducialList"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadMarkupsFiducialList">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;MarkupsFiducials&#39;</span>
+  <span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadModel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadModel"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadModel">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;ModelFile&#39;</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="p">{},</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadScalarOverlay</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadScalarOverlay"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadScalarOverlay">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;ScalarOverlayFile&#39;</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="p">{},</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadTransform</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadTransform"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadTransform">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;TransformFile&#39;</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="p">{},</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadLabelVolume</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadLabelVolume"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadLabelVolume">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;VolumeFile&#39;</span>
+  <span class="n">properties</span><span class="p">[</span><span class="s">&#39;labelmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadVolume</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{},</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span></div>
+<div class="viewcode-block" id="loadVolume"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadVolume">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;VolumeFile&#39;</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">returnNode</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loadScene</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{}):</span></div>
+<div class="viewcode-block" id="loadScene"><a class="viewcode-back" href="../../slicer.html#slicer.util.loadScene">[docs]</a>  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;SceneFile&#39;</span>
+  <span class="k">return</span> <span class="n">loadNodeFromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">returnNode</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">openAddDataDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openAddDataDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openAddDataDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openAddDataDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">openAddVolumeDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openAddVolumeDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openAddVolumeDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openAddVolumeDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">openAddModelDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openAddModelDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openAddModelDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openAddModelDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">openAddScalarOverlayDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openAddScalarOverlayDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openAddScalarOverlayDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openAddScalarOverlayDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">openAddTransformDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openAddTransformDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openAddTransformDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openAddTransformDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">openAddColorTableDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openAddColorTableDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openAddColorTableDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openAddColorTableDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">openAddFiducialDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openAddFiducialDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openAddFiducialDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openAddFiducialDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">openAddFiberBundleDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openAddFiberBundleDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openAddFiberBundleDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openAddFiberBundleDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">openSaveDataDialog</span><span class="p">():</span></div>
+<div class="viewcode-block" id="openSaveDataDialog"><a class="viewcode-back" href="../../slicer.html#slicer.util.openSaveDataDialog">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">openSaveDataDialog</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">saveNode</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{}):</span></div>
+<div class="viewcode-block" id="saveNode"><a class="viewcode-back" href="../../slicer.html#slicer.util.saveNode">[docs]</a>  <span class="sd">&quot;&quot;&quot;Save &#39;node&#39; data into &#39;filename&#39;.</span>
+
+<span class="sd">  It is the user responsability to provide the appropriate file extension.</span>
+
+<span class="sd">  User has also the possibility to overwrite the fileType internally retrieved using</span>
+<span class="sd">  method &#39;qSlicerCoreIOManager::fileWriterFileType(vtkObject*)&#39;. This can be done</span>
+<span class="sd">  by specifiying a &#39;fileType&#39;attribute to the optional &#39;properties&#39; dictionary.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="n">properties</span><span class="p">[</span><span class="s">&quot;nodeID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">GetID</span><span class="p">();</span>
+  <span class="n">properties</span><span class="p">[</span><span class="s">&quot;fileName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
+  <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">properties</span><span class="p">,</span> <span class="s">&quot;fileType&quot;</span><span class="p">):</span>
+    <span class="n">filetype</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&quot;fileType&quot;</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">filetype</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">fileWriterFileType</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">saveNodes</span><span class="p">(</span><span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">saveScene</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">{}):</span></div>
+<div class="viewcode-block" id="saveScene"><a class="viewcode-back" href="../../slicer.html#slicer.util.saveScene">[docs]</a>  <span class="sd">&quot;&quot;&quot;Save the current scene.</span>
+
+<span class="sd">  Based on the value of &#39;filename&#39;, the current scene is saved either</span>
+<span class="sd">  as a MRML file, MRB file or directory.</span>
+
+<span class="sd">  If filename ends with &#39;.mrml&#39;, the scene is saved as a single file</span>
+<span class="sd">  without associated data.</span>
+
+<span class="sd">  If filename ends with &#39;.mrb&#39;, the scene is saved as a MRML bundle (Zip</span>
+<span class="sd">  archive with scene and data files).</span>
+
+<span class="sd">  In every other case, the scene is saved in the directory</span>
+<span class="sd">  specified by &#39;filename&#39;. Both MRML scene file and data</span>
+<span class="sd">  will be written to disk. If needed, directories and sub-directories</span>
+<span class="sd">  will be created.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="n">filetype</span> <span class="o">=</span> <span class="s">&#39;SceneFile&#39;</span>
+  <span class="n">properties</span><span class="p">[</span><span class="s">&#39;fileName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">coreIOManager</span><span class="p">()</span><span class="o">.</span><span class="n">saveNodes</span><span class="p">(</span><span class="n">filetype</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
+
+<span class="c">#</span>
+<span class="c"># Module</span>
+<span class="c">#</span>
+
+<span class="k">def</span> <span class="nf">selectModule</span><span class="p">(</span><span class="n">module</span><span class="p">):</span></div>
+<div class="viewcode-block" id="selectModule"><a class="viewcode-back" href="../../slicer.html#slicer.util.selectModule">[docs]</a>  <span class="n">moduleName</span> <span class="o">=</span> <span class="n">module</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+    <span class="n">moduleName</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span>
+  <span class="n">w</span> <span class="o">=</span> <span class="n">mainWindow</span><span class="p">()</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">w</span><span class="p">:</span> <span class="k">return</span>
+  <span class="n">w</span><span class="o">.</span><span class="n">moduleSelector</span><span class="p">()</span><span class="o">.</span><span class="n">selectModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">moduleNames</span><span class="p">():</span></div>
+<div class="viewcode-block" id="moduleNames"><a class="viewcode-back" href="../../slicer.html#slicer.util.moduleNames">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">moduleManager</span><span class="p">()</span><span class="o">.</span><span class="n">factoryManager</span><span class="p">()</span><span class="o">.</span><span class="n">loadedModuleNames</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">getModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">):</span></div>
+<div class="viewcode-block" id="getModule"><a class="viewcode-back" href="../../slicer.html#slicer.util.getModule">[docs]</a>  <span class="kn">from</span> <span class="nn">slicer</span> <span class="kn">import</span> <span class="n">app</span>
+  <span class="n">module</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">moduleManager</span><span class="p">()</span><span class="o">.</span><span class="n">module</span><span class="p">(</span><span class="n">moduleName</span><span class="p">);</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">module</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Could not find module with name &#39;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">moduleName</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">None</span>
+  <span class="k">return</span> <span class="n">module</span>
+
+<span class="k">def</span> <span class="nf">getModuleGui</span><span class="p">(</span><span class="n">module</span><span class="p">):</span></div>
+<div class="viewcode-block" id="getModuleGui"><a class="viewcode-back" href="../../slicer.html#slicer.util.getModuleGui">[docs]</a>  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">getModule</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+  <span class="n">widgetRepr</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">widgetRepresentation</span><span class="p">()</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">widgetRepr</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Could not find module widget representation with name &#39;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">widgetRepr</span>
+
+<span class="k">def</span> <span class="nf">getNewModuleGui</span><span class="p">(</span><span class="n">module</span><span class="p">):</span></div>
+<div class="viewcode-block" id="getNewModuleGui"><a class="viewcode-back" href="../../slicer.html#slicer.util.getNewModuleGui">[docs]</a>  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">getModule</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+  <span class="n">widgetRepr</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">createNewWidgetRepresentation</span><span class="p">()</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">widgetRepr</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Could not find module widget representation with name &#39;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">widgetRepr</span>
+
+<span class="k">def</span> <span class="nf">reloadScriptedModule</span><span class="p">(</span><span class="n">moduleName</span><span class="p">):</span></div>
+<div class="viewcode-block" id="reloadScriptedModule"><a class="viewcode-back" href="../../slicer.html#slicer.util.reloadScriptedModule">[docs]</a>  <span class="sd">&quot;&quot;&quot;Generic reload method for any scripted module.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">import</span> <span class="nn">imp</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+  <span class="kn">import</span> <span class="nn">slicer</span>
+
+  <span class="n">widgetName</span> <span class="o">=</span> <span class="n">moduleName</span> <span class="o">+</span> <span class="s">&quot;Widget&quot;</span>
+
+  <span class="c"># reload the source code</span>
+  <span class="c"># - set source file path</span>
+  <span class="c"># - load the module to the global space</span>
+  <span class="n">filePath</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s">&#39;slicer.modules.</span><span class="si">%s</span><span class="s">.path&#39;</span> <span class="o">%</span> <span class="n">moduleName</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+  <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filePath</span><span class="p">)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">__contains__</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span> <span class="s">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+    <span class="nb">globals</span><span class="p">()[</span><span class="n">moduleName</span><span class="p">]</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">load_module</span><span class="p">(</span>
+        <span class="n">moduleName</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">filePath</span><span class="p">,</span> <span class="p">(</span><span class="s">&#39;.py&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="n">imp</span><span class="o">.</span><span class="n">PY_SOURCE</span><span class="p">))</span>
+
+  <span class="c"># rebuild the widget</span>
+  <span class="c"># - find and hide the existing widget</span>
+  <span class="c"># - create a new widget in the existing parent</span>
+  <span class="n">parent</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s">&#39;slicer.modules.</span><span class="si">%s</span><span class="s">.widgetRepresentation()&#39;</span> <span class="o">%</span> <span class="n">moduleName</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+  <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">parent</span><span class="o">.</span><span class="n">children</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">child</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+      <span class="k">pass</span>
+  <span class="c"># Remove spacer items</span>
+  <span class="n">item</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="k">while</span> <span class="n">item</span><span class="p">:</span>
+    <span class="n">parent</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">removeItem</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span><span class="o">.</span><span class="n">itemAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+  <span class="c"># delete the old widget instance</span>
+  <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">slicer</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="n">widgetName</span><span class="p">):</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">slicer</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="n">widgetName</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">slicer</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="s">&#39;cleanup&#39;</span><span class="p">):</span>
+      <span class="n">w</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+
+  <span class="c"># create new widget inside existing parent</span>
+  <span class="nb">globals</span><span class="p">()[</span><span class="n">widgetName</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span>
+      <span class="s">&#39;globals()[&quot;</span><span class="si">%s</span><span class="s">&quot;].</span><span class="si">%s</span><span class="s">(parent)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">moduleName</span><span class="p">,</span> <span class="n">widgetName</span><span class="p">))</span>
+  <span class="nb">globals</span><span class="p">()[</span><span class="n">widgetName</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+  <span class="nb">setattr</span><span class="p">(</span><span class="n">slicer</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="n">widgetName</span><span class="p">,</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">widgetName</span><span class="o">.</span><span class="n">lower</span><span class="p">()])</span>
+
+<span class="c">#</span>
+<span class="c"># MRML</span>
+<span class="c">#</span>
+
+<span class="k">def</span> <span class="nf">getNodes</span><span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">):</span></div>
+<div class="viewcode-block" id="getNodes"><a class="viewcode-back" href="../../slicer.html#slicer.util.getNodes">[docs]</a>    <span class="sd">&quot;&quot;&quot;Return a dictionary of nodes where the name or id matches the &#39;pattern&#39;.</span>
+<span class="sd">    Providing an empty &#39;pattern&#39; string will return all nodes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">slicer</span><span class="o">,</span> <span class="nn">fnmatch</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">slicer</span><span class="o">.</span><span class="n">mrmlScene</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">GetNumberOfNodes</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+      <span class="n">node</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">GetNthNode</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+      <span class="n">name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+      <span class="nb">id</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">GetID</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span> <span class="ow">or</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+        <span class="n">nodes</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">GetName</span><span class="p">()]</span> <span class="o">=</span> <span class="n">node</span>
+    <span class="k">return</span> <span class="n">nodes</span>
+
+<span class="k">def</span> <span class="nf">getNode</span><span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span></div>
+<div class="viewcode-block" id="getNode"><a class="viewcode-back" href="../../slicer.html#slicer.util.getNode">[docs]</a>    <span class="sd">&quot;&quot;&quot;Return the indexth node where name or id matches &#39;pattern&#39;.</span>
+<span class="sd">    Providing an empty &#39;pattern&#39; string will return all nodes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">getNodes</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">nodes</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="n">index</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+      <span class="k">return</span> <span class="bp">None</span>
+
+<span class="c">#</span>
+<span class="c"># MRML-numpy</span>
+<span class="c">#</span>
+
+<span class="k">def</span> <span class="nf">array</span><span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span></div>
+<div class="viewcode-block" id="array"><a class="viewcode-back" href="../../slicer.html#slicer.util.array">[docs]</a>  <span class="sd">&quot;&quot;&quot;Return the array you are &quot;most likely to want&quot; from the indexth</span>
+<span class="sd">  MRML node that matches the pattern.  Meant to be used in the python</span>
+<span class="sd">  console for quick debugging/testing.  More specific API should be</span>
+<span class="sd">  used in scripts to be sure you get exactly what you want.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">vectorTypes</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;vtkMRMLVectorVolumeNode&#39;</span><span class="p">,</span> <span class="s">&#39;vtkMRMLMultiVolumeNode&#39;</span><span class="p">)</span>
+  <span class="n">tensorTypes</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;vtkMRMLDiffusionTensorVolumeNode&#39;</span><span class="p">,)</span>
+  <span class="kn">import</span> <span class="nn">vtk.util.numpy_support</span>
+  <span class="n">n</span> <span class="o">=</span> <span class="n">getNode</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">GetClassName</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;vtkMRMLScalarVolumeNode&#39;</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">GetImageData</span><span class="p">()</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">GetImageData</span><span class="p">()</span><span class="o">.</span><span class="n">GetDimensions</span><span class="p">())</span>
+    <span class="n">shape</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">numpy_support</span><span class="o">.</span><span class="n">vtk_to_numpy</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">GetScalars</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span>
+  <span class="k">elif</span> <span class="n">n</span><span class="o">.</span><span class="n">GetClassName</span><span class="p">()</span> <span class="ow">in</span> <span class="n">vectorTypes</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">GetImageData</span><span class="p">()</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">GetImageData</span><span class="p">()</span><span class="o">.</span><span class="n">GetDimensions</span><span class="p">())</span>
+    <span class="n">shape</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="n">components</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">GetNumberOfScalarComponents</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">components</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">numpy_support</span><span class="o">.</span><span class="n">vtk_to_numpy</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">GetScalars</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span>
+  <span class="k">elif</span> <span class="n">n</span><span class="o">.</span><span class="n">GetClassName</span><span class="p">()</span> <span class="ow">in</span> <span class="n">tensorTypes</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">GetImageData</span><span class="p">()</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">GetImageData</span><span class="p">()</span><span class="o">.</span><span class="n">GetDimensions</span><span class="p">())</span>
+    <span class="n">shape</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">numpy_support</span><span class="o">.</span><span class="n">vtk_to_numpy</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">GetTensors</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="o">+</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">a</span>
+  <span class="c"># TODO: accessors for other node types: polydata (verts, polys...), colors</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Slicer 4.3 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kitware.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>slicer Package &mdash; Slicer 4.3 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '4.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Slicer 4.3 documentation" href="index.html" />
+    <link rel="next" title="teem Module" href="teem.html" />
+    <link rel="prev" title="sitkUtils Module" href="sitkUtils.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="teem.html" title="teem Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sitkUtils.html" title="sitkUtils Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Slicer 4.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="slicer-package">
+<h1>slicer Package<a class="headerlink" href="#slicer-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><a class="reference internal" href="#module-slicer" title="slicer"><tt class="xref py py-mod docutils literal"><span class="pre">slicer</span></tt></a> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-slicer"></span><p>This module loads the Slicer library modules into its namespace.</p>
+</div>
+<div class="section" id="module-slicer.cli">
+<span id="cli-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cli</span></tt> Module<a class="headerlink" href="#module-slicer.cli" title="Permalink to this headline">¶</a></h2>
+<p>This module is a place holder for convenient functions allowing to interact with CLI.</p>
+<dl class="function">
+<dt id="slicer.cli.cancel">
+<tt class="descclassname">slicer.cli.</tt><tt class="descname">cancel</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/slicer/cli.html#cancel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.cli.cancel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.cli.createNode">
+<tt class="descclassname">slicer.cli.</tt><tt class="descname">createNode</tt><big>(</big><em>cliModule</em>, <em>parameters=None</em><big>)</big><a class="reference internal" href="_modules/slicer/cli.html#createNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.cli.createNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new vtkMRMLCommandLineModuleNode for a specific module, with
+optional parameters</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.cli.run">
+<tt class="descclassname">slicer.cli.</tt><tt class="descname">run</tt><big>(</big><em>module</em>, <em>node=None</em>, <em>parameters=None</em>, <em>wait_for_completion=False</em>, <em>delete_temporary_files=True</em><big>)</big><a class="reference internal" href="_modules/slicer/cli.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.cli.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a CLI, optionally given a node with optional parameters, returning
+back the node (or the new one if created)
+node: existing parameter node (None by default)
+parameters: dictionary of parameters for cli (None by default)
+wait_for_completion: block if True (False by default)
+delete_temporary_files: remove temp files created during exectuion (True by default)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.cli.setNodeParameters">
+<tt class="descclassname">slicer.cli.</tt><tt class="descname">setNodeParameters</tt><big>(</big><em>node</em>, <em>parameters</em><big>)</big><a class="reference internal" href="_modules/slicer/cli.html#setNodeParameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.cli.setNodeParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets parameters for a vtkMRMLCommandLineModuleNode given a dictionary
+of (parameterName, parameterValue) pairs
+For vectors: provide a list, tuple or comma-separated string
+For enumerations, provide the single enumeration value
+For files and directories, provide a string
+For images, geometry, points and regions, provide a vtkMRMLNode</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-slicer.logic">
+<span id="logic-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">logic</span></tt> Module<a class="headerlink" href="#module-slicer.logic" title="Permalink to this headline">¶</a></h2>
+<p>This module loads all the classes from the vtkSlicerBaseLogic library into its
+namespace.</p>
+</div>
+<div class="section" id="slicerqt-with-tcl-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">slicerqt-with-tcl</span></tt> Module<a class="headerlink" href="#slicerqt-with-tcl-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-slicer.slicerqt">
+<span id="slicerqt-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">slicerqt</span></tt> Module<a class="headerlink" href="#module-slicer.slicerqt" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="slicer.slicerqt.loadSlicerRCFile">
+<tt class="descclassname">slicer.slicerqt.</tt><tt class="descname">loadSlicerRCFile</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/slicerqt.html#loadSlicerRCFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.slicerqt.loadSlicerRCFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>If it exists, execute slicer resource script &#8216;~/.slicerrc.py&#8217;</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-slicer.testing">
+<span id="testing-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testing</span></tt> Module<a class="headerlink" href="#module-slicer.testing" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="slicer.testing.exitFailure">
+<tt class="descclassname">slicer.testing.</tt><tt class="descname">exitFailure</tt><big>(</big><em>message=''</em><big>)</big><a class="reference internal" href="_modules/slicer/testing.html#exitFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.testing.exitFailure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.testing.exitSuccess">
+<tt class="descclassname">slicer.testing.</tt><tt class="descname">exitSuccess</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/testing.html#exitSuccess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.testing.exitSuccess" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.testing.runUnitTest">
+<tt class="descclassname">slicer.testing.</tt><tt class="descname">runUnitTest</tt><big>(</big><em>path</em>, <em>testname</em><big>)</big><a class="reference internal" href="_modules/slicer/testing.html#runUnitTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.testing.runUnitTest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-slicer.util">
+<span id="util-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt> Module<a class="headerlink" href="#module-slicer.util" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="slicer.util.array">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">array</tt><big>(</big><em>pattern=''</em>, <em>index=0</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the array you are &#8220;most likely to want&#8221; from the indexth
+MRML node that matches the pattern.  Meant to be used in the python
+console for quick debugging/testing.  More specific API should be
+used in scripts to be sure you get exactly what you want.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.exit">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">exit</tt><big>(</big><em>status=0</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#exit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.exit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.findChildren">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">findChildren</tt><big>(</big><em>widget=None</em>, <em>name=''</em>, <em>text=''</em>, <em>title=''</em>, <em>className=''</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#findChildren"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.findChildren" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a list of child widgets that match the passed name</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.getModule">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">getModule</tt><big>(</big><em>moduleName</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#getModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.getModule" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.getModuleGui">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">getModuleGui</tt><big>(</big><em>module</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#getModuleGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.getModuleGui" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.getNewModuleGui">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">getNewModuleGui</tt><big>(</big><em>module</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#getNewModuleGui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.getNewModuleGui" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.getNode">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">getNode</tt><big>(</big><em>pattern=''</em>, <em>index=0</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#getNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.getNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the indexth node where name or id matches &#8216;pattern&#8217;.
+Providing an empty &#8216;pattern&#8217; string will return all nodes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.getNodes">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">getNodes</tt><big>(</big><em>pattern=''</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#getNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.getNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of nodes where the name or id matches the &#8216;pattern&#8217;.
+Providing an empty &#8216;pattern&#8217; string will return all nodes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.importClassesFromDirectory">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">importClassesFromDirectory</tt><big>(</big><em>directory</em>, <em>dest_module_name</em>, <em>type_name</em>, <em>filematch='*'</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#importClassesFromDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.importClassesFromDirectory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.importModuleObjects">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">importModuleObjects</tt><big>(</big><em>from_module_name</em>, <em>dest_module_name</em>, <em>type_name</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#importModuleObjects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.importModuleObjects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import object of type &#8216;type_name&#8217; from module identified
+by &#8216;from_module_name&#8217; into the module identified by &#8216;dest_module_name&#8217;.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.importQtClassesFromDirectory">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">importQtClassesFromDirectory</tt><big>(</big><em>directory</em>, <em>dest_module_name</em>, <em>filematch='*'</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#importQtClassesFromDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.importQtClassesFromDirectory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.importVTKClassesFromDirectory">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">importVTKClassesFromDirectory</tt><big>(</big><em>directory</em>, <em>dest_module_name</em>, <em>filematch='*'</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#importVTKClassesFromDirectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.importVTKClassesFromDirectory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadAnnotationFiducial">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadAnnotationFiducial</tt><big>(</big><em>filename</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadAnnotationFiducial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadAnnotationFiducial" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadColorTable">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadColorTable</tt><big>(</big><em>filename</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadColorTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadColorTable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadFiberBundle">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadFiberBundle</tt><big>(</big><em>filename</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadFiberBundle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadFiberBundle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadFiducialList">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadFiducialList</tt><big>(</big><em>filename</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadFiducialList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadFiducialList" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadLabelVolume">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadLabelVolume</tt><big>(</big><em>filename</em>, <em>properties</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadLabelVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadLabelVolume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadMarkupsFiducialList">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadMarkupsFiducialList</tt><big>(</big><em>filename</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadMarkupsFiducialList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadMarkupsFiducialList" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadModel">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadModel</tt><big>(</big><em>filename</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadNodeFromFile">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadNodeFromFile</tt><big>(</big><em>filename</em>, <em>filetype</em>, <em>properties={}</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadNodeFromFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadNodeFromFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadScalarOverlay">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadScalarOverlay</tt><big>(</big><em>filename</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadScalarOverlay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadScalarOverlay" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadScene">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadScene</tt><big>(</big><em>filename</em>, <em>properties={}</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadScene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadScene" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadTransform">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadTransform</tt><big>(</big><em>filename</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadTransform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadTransform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.loadVolume">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">loadVolume</tt><big>(</big><em>filename</em>, <em>properties={}</em>, <em>returnNode=False</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#loadVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.loadVolume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.lookupTopLevelWidget">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">lookupTopLevelWidget</tt><big>(</big><em>objectName</em>, <em>verbose=True</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#lookupTopLevelWidget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.lookupTopLevelWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop over all top level widget associated with &#8216;slicer.app&#8217; and
+return the one matching &#8216;objectName&#8217;</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.mainWindow">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">mainWindow</tt><big>(</big><em>verbose=True</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#mainWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.mainWindow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.moduleNames">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">moduleNames</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#moduleNames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.moduleNames" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openAddColorTableDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openAddColorTableDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openAddColorTableDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openAddColorTableDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openAddDataDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openAddDataDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openAddDataDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openAddDataDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openAddFiberBundleDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openAddFiberBundleDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openAddFiberBundleDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openAddFiberBundleDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openAddFiducialDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openAddFiducialDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openAddFiducialDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openAddFiducialDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openAddModelDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openAddModelDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openAddModelDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openAddModelDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openAddScalarOverlayDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openAddScalarOverlayDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openAddScalarOverlayDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openAddScalarOverlayDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openAddTransformDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openAddTransformDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openAddTransformDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openAddTransformDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openAddVolumeDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openAddVolumeDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openAddVolumeDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openAddVolumeDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.openSaveDataDialog">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">openSaveDataDialog</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#openSaveDataDialog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.openSaveDataDialog" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.pythonShell">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">pythonShell</tt><big>(</big><em>verbose=True</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#pythonShell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.pythonShell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.quit">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">quit</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#quit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.quit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.reloadScriptedModule">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">reloadScriptedModule</tt><big>(</big><em>moduleName</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#reloadScriptedModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.reloadScriptedModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic reload method for any scripted module.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.restart">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">restart</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/slicer/util.html#restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.restart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.saveNode">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">saveNode</tt><big>(</big><em>node</em>, <em>filename</em>, <em>properties={}</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#saveNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.saveNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save &#8216;node&#8217; data into &#8216;filename&#8217;.</p>
+<p>It is the user responsability to provide the appropriate file extension.</p>
+<p>User has also the possibility to overwrite the fileType internally retrieved using
+method &#8216;qSlicerCoreIOManager::fileWriterFileType(vtkObject*)&#8217;. This can be done
+by specifiying a &#8216;fileType&#8217;attribute to the optional &#8216;properties&#8217; dictionary.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.saveScene">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">saveScene</tt><big>(</big><em>filename</em>, <em>properties={}</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#saveScene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.saveScene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the current scene.</p>
+<p>Based on the value of &#8216;filename&#8217;, the current scene is saved either
+as a MRML file, MRB file or directory.</p>
+<p>If filename ends with &#8216;.mrml&#8217;, the scene is saved as a single file
+without associated data.</p>
+<p>If filename ends with &#8216;.mrb&#8217;, the scene is saved as a MRML bundle (Zip
+archive with scene and data files).</p>
+<p>In every other case, the scene is saved in the directory
+specified by &#8216;filename&#8217;. Both MRML scene file and data
+will be written to disk. If needed, directories and sub-directories
+will be created.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.selectModule">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">selectModule</tt><big>(</big><em>module</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#selectModule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.selectModule" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="slicer.util.showStatusMessage">
+<tt class="descclassname">slicer.util.</tt><tt class="descname">showStatusMessage</tt><big>(</big><em>message</em>, <em>duration=0</em><big>)</big><a class="reference internal" href="_modules/slicer/util.html#showStatusMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slicer.util.showStatusMessage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">slicer Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">slicer</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-slicer.cli"><tt class="docutils literal"><span class="pre">cli</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-slicer.logic"><tt class="docutils literal"><span class="pre">logic</span></tt> Module</a></li>
+<li><a class="reference internal" href="#slicerqt-with-tcl-module"><tt class="docutils literal"><span class="pre">slicerqt-with-tcl</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-slicer.slicerqt"><tt class="docutils literal"><span class="pre">slicerqt</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-slicer.testing"><tt class="docutils literal"><span class="pre">testing</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-slicer.util"><tt class="docutils literal"><span class="pre">util</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="sitkUtils.html"
+                        title="previous chapter">sitkUtils Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="teem.html"
+                        title="next chapter">teem Module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/slicer.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="teem.html" title="teem Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sitkUtils.html" title="sitkUtils Module"
+             >previous</a> |</li>
+        <li><a href="index.html">Slicer 4.3 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Kitware.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

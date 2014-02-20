@@ -1,0 +1,11 @@
+modulemrml Package
+==================
+
+:mod:`modulemrml` Package
+-------------------------
+
+.. automodule:: slicer.modulemrml
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

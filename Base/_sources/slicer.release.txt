@@ -1,0 +1,27 @@
+release Package
+===============
+
+:mod:`release` Package
+----------------------
+
+.. automodule:: slicer.release
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`midasdata` Module
+-----------------------
+
+.. automodule:: slicer.release.midasdata
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`midasdata_test` Module
+----------------------------
+
+.. automodule:: slicer.release.midasdata_test
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

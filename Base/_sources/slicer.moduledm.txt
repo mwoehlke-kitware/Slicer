@@ -1,0 +1,11 @@
+moduledm Package
+================
+
+:mod:`moduledm` Package
+-----------------------
+
+.. automodule:: slicer.moduledm
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

@@ -1,0 +1,11 @@
+modulewidget Package
+====================
+
+:mod:`modulewidget` Package
+---------------------------
+
+.. automodule:: slicer.modulewidget
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
