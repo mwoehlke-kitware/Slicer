@@ -1,7 +1,7 @@
 import sys
-import vtk
 
 if not 'sphinx' in sys.modules:
+  import vtk
   import qt
   import ctk
 

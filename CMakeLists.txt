@@ -1143,6 +1143,7 @@ endif()
 add_custom_target(doc ${all_arg})
 
 add_subdirectory(Utilities/Doxygen)
+add_subdirectory(Utilities/Sphinx)
 add_subdirectory(Utilities/Scripts/SlicerWizard/doc)
 
 if(NOT Slicer_INSTALL_NO_DEVELOPMENT)
