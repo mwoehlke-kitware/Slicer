@@ -1,9 +1,6 @@
 slicer Package
 ==============
 
-:mod:`slicer` Package
----------------------
-
 .. automodule:: slicer
     :members:
     :undoc-members:
