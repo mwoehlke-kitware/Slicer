@@ -130,15 +130,19 @@
 <span class="kn">import</span> <span class="nn">weakref</span>
 
 <div class="viewcode-block" id="safeRef"><a class="viewcode-back" href="../saferef.html#saferef.safeRef">[docs]</a><span class="k">def</span> <span class="nf">safeRef</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">onDelete</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a *safe* weak reference to a callable target</span>
+    <span class="sd">&quot;&quot;&quot;Return a *safe* weak reference to a callable target.</span>
 
-<span class="sd">    target -- the object to be weakly referenced, if it&#39;s a</span>
-<span class="sd">        bound method reference, will create a BoundMethodWeakref,</span>
-<span class="sd">        otherwise creates a simple weakref.</span>
-<span class="sd">    onDelete -- if provided, will have a hard reference stored</span>
-<span class="sd">        to the callable to be called after the safe reference</span>
-<span class="sd">        goes out of scope with the reference object, (either a</span>
-<span class="sd">        weakref or a BoundMethodWeakref) as argument.</span>
+<span class="sd">    :param target:</span>
+<span class="sd">      The object to be weakly referenced. If it&#39;s a bound method reference,</span>
+<span class="sd">      will create a :class:`.BoundMethodWeakref`; otherwise creates a simple</span>
+<span class="sd">      :class:`weakref.ref`.</span>
+<span class="sd">    :param onDelete:</span>
+<span class="sd">      If provided, will have a hard reference stored to the callable to be</span>
+<span class="sd">      called after the safe reference goes out of scope with the reference</span>
+<span class="sd">      object, (either a :class:`weakref.ref` or a :class:`.BoundMethodWeakref`)</span>
+<span class="sd">      as argument.</span>
+
+<span class="sd">    :rtype: :class:`weakref.ref` or :class:`.BoundMethodWeakref`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">&#39;im_self&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">target</span><span class="o">.</span><span class="n">im_self</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -165,27 +169,35 @@
 <span class="sd">    object keeps weak references to both the object and the</span>
 <span class="sd">    function which together define the instance method.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        key -- the identity key for the reference, calculated</span>
-<span class="sd">            by the class&#39;s calculateKey method applied to the</span>
-<span class="sd">            target instance method</span>
-<span class="sd">        deletionMethods -- sequence of callable objects taking</span>
-<span class="sd">            single argument, a reference to this object which</span>
-<span class="sd">            will be called when *either* the target object or</span>
-<span class="sd">            target function is garbage collected (i.e. when</span>
-<span class="sd">            this object becomes invalid).  These are specified</span>
-<span class="sd">            as the onDelete parameters of safeRef calls.</span>
-<span class="sd">        weakSelf -- weak reference to the target object</span>
-<span class="sd">        weakFunc -- weak reference to the target function</span>
+<span class="sd">    .. attribute:: key</span>
 
-<span class="sd">    Class Attributes:</span>
-<span class="sd">        _allInstances -- class attribute pointing to all live</span>
-<span class="sd">            BoundMethodWeakref objects indexed by the class&#39;s</span>
-<span class="sd">            calculateKey(target) method applied to the target</span>
-<span class="sd">            objects.  This weak value dictionary is used to</span>
-<span class="sd">            short-circuit creation so that multiple references</span>
-<span class="sd">            to the same (object, function) pair produce the</span>
-<span class="sd">            same BoundMethodWeakref instance.</span>
+<span class="sd">        The identity key for the reference, calculated by the class&#39;s</span>
+<span class="sd">        calculateKey method applied to the target instance method.</span>
+
+<span class="sd">    .. attribute:: deletionMethods</span>
+
+<span class="sd">        Sequence of callable objects taking a single argument: a reference to</span>
+<span class="sd">        this object which will be called when *either* the target object or</span>
+<span class="sd">        target function is garbage collected (i.e. when this object becomes</span>
+<span class="sd">        invalid).  These are specified as the onDelete parameters of safeRef</span>
+<span class="sd">        calls.</span>
+
+<span class="sd">    .. attribute:: weakSelf</span>
+
+<span class="sd">        Weak reference to the target object.</span>
+
+<span class="sd">    .. attribute:: weakFunc</span>
+
+<span class="sd">        Weak reference to the target function.</span>
+
+<span class="sd">    .. attribute:: _allInstances</span>
+
+<span class="sd">        Class attribute pointing to all live :class:`.BoundMethodWeakref`</span>
+<span class="sd">        objects indexed by the class&#39;s calculateKey(target) method applied to</span>
+<span class="sd">        the target objects.  This weak value dictionary is used to</span>
+<span class="sd">        short-circuit creation so that multiple references to the same</span>
+<span class="sd">        ``(object, function)`` pair produce the same</span>
+<span class="sd">        :class:`.BoundMethodWeakref` instance.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 

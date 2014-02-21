@@ -150,8 +150,10 @@
 <div class="viewcode-block" id="tpycl.py_vtkInstanceName"><a class="viewcode-back" href="../../tpycl.html#tpycl.tpycl.tpycl.py_vtkInstanceName">[docs]</a>  <span class="k">def</span> <span class="nf">py_vtkInstanceName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">instance</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; make a unique name for an instance using the classname and</span>
 <span class="sd">    pointer in hex</span>
-<span class="sd">    - assumes the string form of the instance will end with hex</span>
-<span class="sd">      encoding of the pointer, for example: &#39;(vtkImageData)0x2a9a750&#39;</span>
+
+<span class="sd">    .. note:: Assumes the string form of the instance will end with hex \</span>
+<span class="sd">              encoding of the pointer. \</span>
+<span class="sd">              For example: ``&#39;(vtkImageData)0x2a9a750&#39;``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c"># used to work with vtk 5.6</span>
     <span class="c">#return &quot;%s%s&quot; % (instance.GetClassName(), repr(instance).split()[-1][:-1])</span>

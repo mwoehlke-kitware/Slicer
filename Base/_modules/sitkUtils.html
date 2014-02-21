@@ -70,8 +70,7 @@
     <span class="k">return</span> <span class="n">myNodeFullITKAddress</span>
 </div>
 <div class="viewcode-block" id="CloneSlicerNode"><a class="viewcode-back" href="../sitkUtils.html#sitkUtils.CloneSlicerNode">[docs]</a><span class="k">def</span> <span class="nf">CloneSlicerNode</span><span class="p">(</span> <span class="n">NodeName</span><span class="p">,</span> <span class="n">NewNodeNamePrefix</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Create a new node in slicer by cloning</span>
-<span class="sd">            from an exising node.</span>
+    <span class="sd">&quot;&quot;&quot; Create a new node in slicer by cloning from an exising node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">slicer</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">NodeName</span><span class="p">)</span>
     <span class="n">vl</span> <span class="o">=</span> <span class="n">slicer</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">volumes</span><span class="o">.</span><span class="n">logic</span><span class="p">()</span>
@@ -81,14 +80,14 @@
 <span class="n">__sitk__VOLUME_TYPES__</span> <span class="o">=</span> <span class="p">[</span> <span class="s">&#39;Scalar&#39;</span> <span class="p">]</span>
 
 <div class="viewcode-block" id="checkVolumeNodeType"><a class="viewcode-back" href="../sitkUtils.html#sitkUtils.checkVolumeNodeType">[docs]</a><span class="k">def</span> <span class="nf">checkVolumeNodeType</span><span class="p">(</span><span class="n">nodeType</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Raise an error if the node type is not a recognized volume node</span>
+    <span class="sd">&quot;&quot;&quot; Raise an error if the node type is not a recognized volume node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">volume_type</span> <span class="o">=</span> <span class="n">nodeType</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s">&#39;VolumeNode&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;vtkMRML&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">volume_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">__sitk__VOLUME_TYPES__</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Volume type </span><span class="si">%s</span><span class="s"> is not valid&#39;</span> <span class="o">%</span> <span class="n">volume_type</span> <span class="p">)</span>
 </div>
 <div class="viewcode-block" id="CreateNewVolumeNode"><a class="viewcode-back" href="../sitkUtils.html#sitkUtils.CreateNewVolumeNode">[docs]</a><span class="k">def</span> <span class="nf">CreateNewVolumeNode</span><span class="p">(</span><span class="n">nodeName</span><span class="p">,</span> <span class="n">nodeType</span><span class="o">=</span><span class="s">&#39;vtkMRMLScalarVolumeNode&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Create a new node from scratch</span>
+    <span class="sd">&quot;&quot;&quot; Create a new volume node from scratch.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scene</span> <span class="o">=</span> <span class="n">slicer</span><span class="o">.</span><span class="n">mrmlScene</span>
     <span class="n">checkVolumeNodeType</span><span class="p">(</span><span class="n">nodeType</span><span class="p">)</span>
@@ -98,7 +97,7 @@
     <span class="k">return</span> <span class="n">newNode</span>
 </div>
 <div class="viewcode-block" id="CreateNewDisplayNode"><a class="viewcode-back" href="../sitkUtils.html#sitkUtils.CreateNewDisplayNode">[docs]</a><span class="k">def</span> <span class="nf">CreateNewDisplayNode</span><span class="p">(</span><span class="n">nodeName</span><span class="o">=</span><span class="s">&#39;default&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Create a new node from scratch</span>
+    <span class="sd">&quot;&quot;&quot; Create a new display node from scratch.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scene</span> <span class="o">=</span> <span class="n">slicer</span><span class="o">.</span><span class="n">mrmlScene</span>
     <span class="n">nodeType</span><span class="o">=</span><span class="s">&#39;vtkMRMLScalarVolumeDisplayNode&#39;</span>
@@ -108,7 +107,7 @@
     <span class="k">return</span> <span class="n">newNode</span>
 </div>
 <div class="viewcode-block" id="removeOldMRMLNode"><a class="viewcode-back" href="../sitkUtils.html#sitkUtils.removeOldMRMLNode">[docs]</a><span class="k">def</span> <span class="nf">removeOldMRMLNode</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Overwrite a MRML node with the same name and class as the given node</span>
+    <span class="sd">&quot;&quot;&quot; Overwrite a MRML node with the same name and class as the given node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scene</span> <span class="o">=</span> <span class="n">slicer</span><span class="o">.</span><span class="n">mrmlScene</span>
     <span class="n">collection</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">GetNodesByClassByName</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">GetClassName</span><span class="p">(),</span> <span class="n">node</span><span class="o">.</span><span class="n">GetName</span><span class="p">())</span>
@@ -142,8 +141,7 @@
     <span class="n">volumeNode</span> <span class="o">=</span> <span class="n">vl</span><span class="o">.</span><span class="n">AddArchetypeVolume</span><span class="p">(</span><span class="s">&#39;_DUMMY_DOES_NOT_EXISTS__&#39;</span><span class="p">,</span><span class="s">&#39;invalidRead&#39;</span><span class="p">)</span>
 </div>
 <div class="viewcode-block" id="PullFromSlicer"><a class="viewcode-back" href="../sitkUtils.html#sitkUtils.PullFromSlicer">[docs]</a><span class="k">def</span> <span class="nf">PullFromSlicer</span><span class="p">(</span> <span class="n">NodeName</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Given a slicer MRML image name, return the SimpleITK</span>
-<span class="sd">            image object.</span>
+    <span class="sd">&quot;&quot;&quot; Given a slicer MRML image name, return the SimpleITK image object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">EnsureRegistration</span><span class="p">()</span>
     <span class="n">myNodeFullITKAddress</span> <span class="o">=</span> <span class="n">GetSlicerITKReadWriteAddress</span><span class="p">(</span> <span class="n">NodeName</span> <span class="p">)</span>
@@ -151,13 +149,16 @@
     <span class="k">return</span> <span class="n">sitkimage</span>
 </div>
 <div class="viewcode-block" id="PushToSlicer"><a class="viewcode-back" href="../sitkUtils.html#sitkUtils.PushToSlicer">[docs]</a><span class="k">def</span> <span class="nf">PushToSlicer</span><span class="p">(</span><span class="n">sitkimage</span><span class="p">,</span> <span class="n">NodeName</span><span class="p">,</span> <span class="n">compositeView</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Given a SimpleITK image, push it back to slicer for viewing</span>
-<span class="sd">    ===============================================================</span>
-<span class="sd">    Viewing options</span>
-<span class="sd">    ---------------</span>
-<span class="sd">    bit 0: Set as background image</span>
-<span class="sd">    bit 1: Set as foreground image</span>
-<span class="sd">    bit 2: Set as label image</span>
+    <span class="sd">&quot;&quot;&quot; Given a SimpleITK image, push it back to slicer for viewing.</span>
+
+<span class="sd">    Viewing options:</span>
+
+<span class="sd">      **bit 0**:</span>
+<span class="sd">        Set as background image</span>
+<span class="sd">      **bit 1**:</span>
+<span class="sd">        Set as foreground image</span>
+<span class="sd">      **bit 2**:</span>
+<span class="sd">        Set as label image</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">sitkUtils</span> <span class="kn">import</span> <span class="n">EnsureRegistration</span><span class="p">,</span> <span class="n">CreateNewVolumeNode</span><span class="p">,</span> <span class="n">CreateNewDisplayNode</span><span class="p">,</span> <span class="n">GetSlicerITKReadWriteAddress</span>
     <span class="n">scene</span> <span class="o">=</span> <span class="n">slicer</span><span class="o">.</span><span class="n">mrmlScene</span>

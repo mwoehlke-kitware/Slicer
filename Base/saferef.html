@@ -70,34 +70,46 @@ method object itself (which is normally a transient
 object) is kept alive.  Instead, the BoundMethodWeakref
 object keeps weak references to both the object and the
 function which together define the instance method.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><dl class="first docutils">
-<dt>key &#8211; the identity key for the reference, calculated</dt>
-<dd>by the class&#8217;s calculateKey method applied to the
-target instance method</dd>
-<dt>deletionMethods &#8211; sequence of callable objects taking</dt>
-<dd>single argument, a reference to this object which
-will be called when <em>either</em> the target object or
-target function is garbage collected (i.e. when
-this object becomes invalid).  These are specified
-as the onDelete parameters of safeRef calls.</dd>
-</dl>
-<p class="last">weakSelf &#8211; weak reference to the target object
-weakFunc &#8211; weak reference to the target function</p>
-</dd>
-<dt>Class Attributes:</dt>
-<dd><dl class="first last docutils">
-<dt>_allInstances &#8211; class attribute pointing to all live</dt>
-<dd>BoundMethodWeakref objects indexed by the class&#8217;s
-calculateKey(target) method applied to the target
-objects.  This weak value dictionary is used to
-short-circuit creation so that multiple references
-to the same (object, function) pair produce the
-same BoundMethodWeakref instance.</dd>
-</dl>
-</dd>
-</dl>
+<dl class="attribute">
+<dt id="saferef.BoundMethodWeakref.key">
+<tt class="descname">key</tt><a class="headerlink" href="#saferef.BoundMethodWeakref.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identity key for the reference, calculated by the class&#8217;s
+calculateKey method applied to the target instance method.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="saferef.BoundMethodWeakref.deletionMethods">
+<tt class="descname">deletionMethods</tt><a class="headerlink" href="#saferef.BoundMethodWeakref.deletionMethods" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sequence of callable objects taking a single argument: a reference to
+this object which will be called when <em>either</em> the target object or
+target function is garbage collected (i.e. when this object becomes
+invalid).  These are specified as the onDelete parameters of safeRef
+calls.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="saferef.BoundMethodWeakref.weakSelf">
+<tt class="descname">weakSelf</tt><a class="headerlink" href="#saferef.BoundMethodWeakref.weakSelf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weak reference to the target object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="saferef.BoundMethodWeakref.weakFunc">
+<tt class="descname">weakFunc</tt><a class="headerlink" href="#saferef.BoundMethodWeakref.weakFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weak reference to the target function.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="saferef.BoundMethodWeakref._allInstances">
+<tt class="descname">_allInstances</tt><a class="headerlink" href="#saferef.BoundMethodWeakref._allInstances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class attribute pointing to all live <a class="reference internal" href="#saferef.BoundMethodWeakref" title="saferef.BoundMethodWeakref"><tt class="xref py py-class docutils literal"><span class="pre">BoundMethodWeakref</span></tt></a>
+objects indexed by the class&#8217;s calculateKey(target) method applied to
+the target objects.  This weak value dictionary is used to
+short-circuit creation so that multiple references to the same
+<tt class="docutils literal"><span class="pre">(object,</span> <span class="pre">function)</span></tt> pair produce the same
+<a class="reference internal" href="#saferef.BoundMethodWeakref" title="saferef.BoundMethodWeakref"><tt class="xref py py-class docutils literal"><span class="pre">BoundMethodWeakref</span></tt></a> instance.</p>
+</dd></dl>
+
 <dl class="classmethod">
 <dt id="saferef.BoundMethodWeakref.calculateKey">
 <em class="property">classmethod </em><tt class="descname">calculateKey</tt><big>(</big><em>target</em><big>)</big><a class="reference internal" href="_modules/saferef.html#BoundMethodWeakref.calculateKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saferef.BoundMethodWeakref.calculateKey" title="Permalink to this definition">¶</a></dt>
@@ -136,16 +148,27 @@ the underlying class method implementation</p>
 <dl class="function">
 <dt id="saferef.safeRef">
 <tt class="descclassname">saferef.</tt><tt class="descname">safeRef</tt><big>(</big><em>target</em>, <em>onDelete=None</em><big>)</big><a class="reference internal" href="_modules/saferef.html#safeRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#saferef.safeRef" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a <em>safe</em> weak reference to a callable target</p>
-<dl class="docutils">
-<dt>target &#8211; the object to be weakly referenced, if it&#8217;s a</dt>
-<dd>bound method reference, will create a BoundMethodWeakref,
-otherwise creates a simple weakref.</dd>
-<dt>onDelete &#8211; if provided, will have a hard reference stored</dt>
-<dd>to the callable to be called after the safe reference
-goes out of scope with the reference object, (either a
-weakref or a BoundMethodWeakref) as argument.</dd>
-</dl>
+<dd><p>Return a <em>safe</em> weak reference to a callable target.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>target</strong> &#8211; The object to be weakly referenced. If it&#8217;s a bound method reference,
+will create a <a class="reference internal" href="#saferef.BoundMethodWeakref" title="saferef.BoundMethodWeakref"><tt class="xref py py-class docutils literal"><span class="pre">BoundMethodWeakref</span></tt></a>; otherwise creates a simple
+<a class="reference external" href="http://docs.python.org/2.7/library/weakref.html#weakref.ref" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">weakref.ref</span></tt></a>.</li>
+<li><strong>onDelete</strong> &#8211; If provided, will have a hard reference stored to the callable to be
+called after the safe reference goes out of scope with the reference
+object, (either a <a class="reference external" href="http://docs.python.org/2.7/library/weakref.html#weakref.ref" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">weakref.ref</span></tt></a> or a <a class="reference internal" href="#saferef.BoundMethodWeakref" title="saferef.BoundMethodWeakref"><tt class="xref py py-class docutils literal"><span class="pre">BoundMethodWeakref</span></tt></a>)
+as argument.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="http://docs.python.org/2.7/library/weakref.html#weakref.ref" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">weakref.ref</span></tt></a> or <a class="reference internal" href="#saferef.BoundMethodWeakref" title="saferef.BoundMethodWeakref"><tt class="xref py py-class docutils literal"><span class="pre">BoundMethodWeakref</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

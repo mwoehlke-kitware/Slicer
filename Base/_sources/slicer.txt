@@ -1,9 +1,6 @@
 slicer Package
 ==============
 
-:mod:`slicer` Package
----------------------
-
 .. automodule:: slicer
     :members:
     :undoc-members:
@@ -21,14 +18,6 @@ slicer Package
 -------------------
 
 .. automodule:: slicer.logic
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`slicerqt-with-tcl` Module
--------------------------------
-
-.. automodule:: slicer.slicerqt-with-tcl
     :members:
     :undoc-members:
     :show-inheritance:

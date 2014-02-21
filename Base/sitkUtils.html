@@ -64,20 +64,19 @@
 <dl class="function">
 <dt id="sitkUtils.CloneSlicerNode">
 <tt class="descclassname">sitkUtils.</tt><tt class="descname">CloneSlicerNode</tt><big>(</big><em>NodeName</em>, <em>NewNodeNamePrefix</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#CloneSlicerNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.CloneSlicerNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new node in slicer by cloning
-from an exising node.</p>
+<dd><p>Create a new node in slicer by cloning from an exising node.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="sitkUtils.CreateNewDisplayNode">
 <tt class="descclassname">sitkUtils.</tt><tt class="descname">CreateNewDisplayNode</tt><big>(</big><em>nodeName='default'</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#CreateNewDisplayNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.CreateNewDisplayNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new node from scratch</p>
+<dd><p>Create a new display node from scratch.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="sitkUtils.CreateNewVolumeNode">
 <tt class="descclassname">sitkUtils.</tt><tt class="descname">CreateNewVolumeNode</tt><big>(</big><em>nodeName</em>, <em>nodeType='vtkMRMLScalarVolumeNode'</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#CreateNewVolumeNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.CreateNewVolumeNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new node from scratch</p>
+<dd><p>Create a new volume node from scratch.</p>
 </dd></dl>
 
 <dl class="function">
@@ -99,8 +98,7 @@ so that the image can be read directly from the MRML scene</p>
 <dl class="function">
 <dt id="sitkUtils.PullFromSlicer">
 <tt class="descclassname">sitkUtils.</tt><tt class="descname">PullFromSlicer</tt><big>(</big><em>NodeName</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#PullFromSlicer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.PullFromSlicer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a slicer MRML image name, return the SimpleITK
-image object.</p>
+<dd><p>Given a slicer MRML image name, return the SimpleITK image object.</p>
 </dd></dl>
 
 <dl class="function">
@@ -121,21 +119,30 @@ image object.</p>
 <dl class="function">
 <dt id="sitkUtils.PushToSlicer">
 <tt class="descclassname">sitkUtils.</tt><tt class="descname">PushToSlicer</tt><big>(</big><em>sitkimage</em>, <em>NodeName</em>, <em>compositeView=0</em>, <em>overwrite=False</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#PushToSlicer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.PushToSlicer" title="Permalink to this definition">¶</a></dt>
-<dd><p>bit 0: Set as background image
-bit 1: Set as foreground image
-bit 2: Set as label image</p>
+<dd><p>Given a SimpleITK image, push it back to slicer for viewing.</p>
+<p>Viewing options:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>bit 0</strong>:</dt>
+<dd>Set as background image</dd>
+<dt><strong>bit 1</strong>:</dt>
+<dd>Set as foreground image</dd>
+<dt><strong>bit 2</strong>:</dt>
+<dd>Set as label image</dd>
+</dl>
+</div></blockquote>
 </dd></dl>
 
 <dl class="function">
 <dt id="sitkUtils.checkVolumeNodeType">
 <tt class="descclassname">sitkUtils.</tt><tt class="descname">checkVolumeNodeType</tt><big>(</big><em>nodeType</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#checkVolumeNodeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.checkVolumeNodeType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Raise an error if the node type is not a recognized volume node</p>
+<dd><p>Raise an error if the node type is not a recognized volume node.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="sitkUtils.removeOldMRMLNode">
 <tt class="descclassname">sitkUtils.</tt><tt class="descname">removeOldMRMLNode</tt><big>(</big><em>node</em><big>)</big><a class="reference internal" href="_modules/sitkUtils.html#removeOldMRMLNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sitkUtils.removeOldMRMLNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overwrite a MRML node with the same name and class as the given node</p>
+<dd><p>Overwrite a MRML node with the same name and class as the given node.</p>
 </dd></dl>
 
 <dl class="function">
