@@ -25,14 +25,6 @@ slicer Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`slicerqt-with-tcl` Module
--------------------------------
-
-.. automodule:: slicer.slicerqt-with-tcl
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`slicerqt` Module
 ----------------------
 

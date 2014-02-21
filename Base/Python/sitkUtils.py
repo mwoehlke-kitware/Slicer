@@ -19,8 +19,7 @@ def GetSlicerITKReadWriteAddress( NodeName ):
     return myNodeFullITKAddress
 
 def CloneSlicerNode( NodeName, NewNodeNamePrefix ):
-    """ Create a new node in slicer by cloning
-            from an exising node.
+    """ Create a new node in slicer by cloning from an exising node.
     """
     n = slicer.util.getNode(NodeName)
     vl = slicer.modules.volumes.logic()
@@ -30,14 +29,14 @@ def CloneSlicerNode( NodeName, NewNodeNamePrefix ):
 __sitk__VOLUME_TYPES__ = [ 'Scalar' ]
 
 def checkVolumeNodeType(nodeType):
-    """ Raise an error if the node type is not a recognized volume node
+    """ Raise an error if the node type is not a recognized volume node.
     """
     volume_type = nodeType.rsplit('VolumeNode')[0].split('vtkMRML')[1]
     if volume_type not in __sitk__VOLUME_TYPES__:
         raise ValueError('Volume type %s is not valid' % volume_type )
 
 def CreateNewVolumeNode(nodeName, nodeType='vtkMRMLScalarVolumeNode', overwrite=False):
-    """ Create a new node from scratch
+    """ Create a new volume node from scratch.
     """
     scene = slicer.mrmlScene
     checkVolumeNodeType(nodeType)
@@ -47,7 +46,7 @@ def CreateNewVolumeNode(nodeName, nodeType='vtkMRMLScalarVolumeNode', overwrite=
     return newNode
 
 def CreateNewDisplayNode(nodeName='default'):
-    """ Create a new node from scratch
+    """ Create a new display node from scratch.
     """
     scene = slicer.mrmlScene
     nodeType='vtkMRMLScalarVolumeDisplayNode'
@@ -57,7 +56,7 @@ def CreateNewDisplayNode(nodeName='default'):
     return newNode
 
 def removeOldMRMLNode(node):
-    """ Overwrite a MRML node with the same name and class as the given node
+    """ Overwrite a MRML node with the same name and class as the given node.
     """
     scene = slicer.mrmlScene
     collection = scene.GetNodesByClassByName(node.GetClassName(), node.GetName())
@@ -91,8 +90,7 @@ def EnsureRegistration():
     volumeNode = vl.AddArchetypeVolume('_DUMMY_DOES_NOT_EXISTS__','invalidRead')
 
 def PullFromSlicer( NodeName ):
-    """ Given a slicer MRML image name, return the SimpleITK
-            image object.
+    """ Given a slicer MRML image name, return the SimpleITK image object.
     """
     EnsureRegistration()
     myNodeFullITKAddress = GetSlicerITKReadWriteAddress( NodeName )
@@ -100,13 +98,16 @@ def PullFromSlicer( NodeName ):
     return sitkimage
 
 def PushToSlicer(sitkimage, NodeName, compositeView=0, overwrite=False):
-    """ Given a SimpleITK image, push it back to slicer for viewing
-    ===============================================================
-    Viewing options
-    ---------------
-    bit 0: Set as background image
-    bit 1: Set as foreground image
-    bit 2: Set as label image
+    """ Given a SimpleITK image, push it back to slicer for viewing.
+
+    Viewing options:
+
+      **bit 0**:
+        Set as background image
+      **bit 1**:
+        Set as foreground image
+      **bit 2**:
+        Set as label image
     """
     from sitkUtils import EnsureRegistration, CreateNewVolumeNode, CreateNewDisplayNode, GetSlicerITKReadWriteAddress
     scene = slicer.mrmlScene

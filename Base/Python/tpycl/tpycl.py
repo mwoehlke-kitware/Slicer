@@ -99,8 +99,10 @@ class tpycl(object):
   def py_vtkInstanceName(self,instance):
     """ make a unique name for an instance using the classname and
     pointer in hex
-    - assumes the string form of the instance will end with hex
-      encoding of the pointer, for example: '(vtkImageData)0x2a9a750'
+
+    .. note:: Assumes the string form of the instance will end with hex \
+              encoding of the pointer. \
+              For example: ``'(vtkImageData)0x2a9a750'``
     """
     # used to work with vtk 5.6
     #return "%s%s" % (instance.GetClassName(), repr(instance).split()[-1][:-1])

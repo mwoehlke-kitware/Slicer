@@ -79,15 +79,19 @@ import traceback
 import weakref
 
 def safeRef(target, onDelete = None):
-    """Return a *safe* weak reference to a callable target
+    """Return a *safe* weak reference to a callable target.
 
-    target -- the object to be weakly referenced, if it's a
-        bound method reference, will create a BoundMethodWeakref,
-        otherwise creates a simple weakref.
-    onDelete -- if provided, will have a hard reference stored
-        to the callable to be called after the safe reference
-        goes out of scope with the reference object, (either a
-        weakref or a BoundMethodWeakref) as argument.
+    :param target:
+      The object to be weakly referenced. If it's a bound method reference,
+      will create a :class:`.BoundMethodWeakref`; otherwise creates a simple
+      :class:`weakref.ref`.
+    :param onDelete:
+      If provided, will have a hard reference stored to the callable to be
+      called after the safe reference goes out of scope with the reference
+      object, (either a :class:`weakref.ref` or a :class:`.BoundMethodWeakref`)
+      as argument.
+
+    :rtype: :class:`weakref.ref` or :class:`.BoundMethodWeakref`
     """
     if hasattr(target, 'im_self'):
         if target.im_self is not None:
@@ -114,27 +118,35 @@ class BoundMethodWeakref(object):
     object keeps weak references to both the object and the
     function which together define the instance method.
 
-    Attributes:
-        key -- the identity key for the reference, calculated
-            by the class's calculateKey method applied to the
-            target instance method
-        deletionMethods -- sequence of callable objects taking
-            single argument, a reference to this object which
-            will be called when *either* the target object or
-            target function is garbage collected (i.e. when
-            this object becomes invalid).  These are specified
-            as the onDelete parameters of safeRef calls.
-        weakSelf -- weak reference to the target object
-        weakFunc -- weak reference to the target function
+    .. attribute:: key
 
-    Class Attributes:
-        _allInstances -- class attribute pointing to all live
-            BoundMethodWeakref objects indexed by the class's
-            calculateKey(target) method applied to the target
-            objects.  This weak value dictionary is used to
-            short-circuit creation so that multiple references
-            to the same (object, function) pair produce the
-            same BoundMethodWeakref instance.
+        The identity key for the reference, calculated by the class's
+        calculateKey method applied to the target instance method.
+
+    .. attribute:: deletionMethods
+
+        Sequence of callable objects taking a single argument: a reference to
+        this object which will be called when *either* the target object or
+        target function is garbage collected (i.e. when this object becomes
+        invalid).  These are specified as the onDelete parameters of safeRef
+        calls.
+
+    .. attribute:: weakSelf
+
+        Weak reference to the target object.
+
+    .. attribute:: weakFunc
+
+        Weak reference to the target function.
+
+    .. attribute:: _allInstances
+
+        Class attribute pointing to all live :class:`.BoundMethodWeakref`
+        objects indexed by the class's calculateKey(target) method applied to
+        the target objects.  This weak value dictionary is used to
+        short-circuit creation so that multiple references to the same
+        ``(object, function)`` pair produce the same
+        :class:`.BoundMethodWeakref` instance.
 
     """
 
