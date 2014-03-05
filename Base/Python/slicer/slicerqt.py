@@ -22,7 +22,13 @@ except: pass
 #
 
 def loadSlicerRCFile():
-  """If it exists, execute slicer resource script '~/.slicerrc.py'"""
+  """Execute default Slicer "RC" script.
+
+  This executes the default Slicer "RC" script, if it exists. If the
+  environment variable ``SLICERRC`` is set, it is taken to be the path to the
+  script; otherwise, ``~/.slicerrc.py`` is used. If this file exists, it is
+  executed via :func:`execfile`.
+  """
   import os
   if os.environ.has_key('SLICERRC'):
     rcfile = os.environ['SLICERRC']
