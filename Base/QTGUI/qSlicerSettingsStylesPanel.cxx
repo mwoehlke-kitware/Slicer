@@ -269,7 +269,6 @@ void qSlicerSettingsStylesPanel::onStyleChanged(const QString& newStyleName)
 
   app->setStyle(newStyle);
   app->installEventFilter(app->style());
-  app->setPalette(newStyle->standardPalette());
 
   emit this->currentStyleChanged(newStyleName);
 }

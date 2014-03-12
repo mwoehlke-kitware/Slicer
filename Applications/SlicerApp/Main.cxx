@@ -113,15 +113,12 @@ int SlicerAppMain(int argc, char* argv[])
   QCoreApplication::setApplicationName("Slicer");
   QCoreApplication::setApplicationVersion(Slicer_VERSION_FULL);
   //vtkObject::SetGlobalWarningDisplay(false);
-  QApplication::setDesktopSettingsAware(false);
-  QApplication::setStyle(new qSlicerStyle());
 
   qSlicerApplication app(argc, argv);
   if (app.returnCode() != -1)
     {
     return app.returnCode();
     }
-  app.installEventFilter(app.style());
 
 
 #ifdef Slicer_USE_QtTesting
