@@ -29,11 +29,7 @@ if(NOT DEFINED qRestAPI_DIR)
     SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj}
     BINARY_DIR ${proj}-build
     CMAKE_CACHE_ARGS
-      -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
-      -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
-      -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
-      #-DCMAKE_C_FLAGS:STRING=${ep_common_c_flags} # Unused
-      -DBUILD_TESTING:BOOL=OFF
+      ${ep_common_cache_args}
       -DBUILD_SHARED_LIBS:BOOL=OFF
       -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
     INSTALL_COMMAND ""
@@ -41,6 +37,9 @@ if(NOT DEFINED qRestAPI_DIR)
       ${${proj}_DEPENDENCIES}
     )
   set(qRestAPI_DIR ${CMAKE_BINARY_DIR}/${proj}-build)
+
+  # Libraries are built static; install is not required
+  # ExternalProject_Install_CMake(${proj})
 
 else()
   ExternalProject_Add_Empty(${proj} DEPENDS ${${proj}_DEPENDENCIES})
