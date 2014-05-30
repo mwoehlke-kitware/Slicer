@@ -381,6 +381,7 @@ if(Slicer_BUILD_I18N_SUPPORT)
   include(SlicerMacroTranslation)
 endif()
 include(SlicerFunctionInstallLibrary)
+include(SlicerFunctionCompilePythonScript)
 include(SlicerFunctionAddPythonQtResources)
 
 #-----------------------------------------------------------------------------

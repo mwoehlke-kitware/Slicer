@@ -34,11 +34,10 @@ if(Slicer_BUILD_EXTENSIONMANAGER_SUPPORT)
     ExtensionWizard.py
     )
 
-  ctkMacroCompilePythonScript(
-    TARGET_NAME ExecScripts
-    SCRIPTS "${Slicer_LIBEXEC_PYTHON_SCRIPTS}"
-    DESTINATION_DIR ${Slicer_BINARY_DIR}/libexec
-    INSTALL_DIR ${Slicer_INSTALL_LIBEXEC_DIR}
-    NO_INSTALL_SUBDIR
+  slicerFunctionCompilePythonScript(
+    TARGET ExecScripts
+    EXECUTABLE SCRIPTS "${Slicer_LIBEXEC_PYTHON_SCRIPTS}"
+    DESTINATION ${Slicer_BINARY_DIR}/libexec
+    INSTALL_DESTINATION ${Slicer_INSTALL_LIBEXEC_DIR}
     )
 endif()
