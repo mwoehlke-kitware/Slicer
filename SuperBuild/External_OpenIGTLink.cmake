@@ -32,12 +32,8 @@ if(NOT DEFINED OpenIGTLink_DIR AND NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
     SOURCE_DIR OpenIGTLink
     BINARY_DIR OpenIGTLink-build
     CMAKE_CACHE_ARGS
-      -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
-      -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
-      -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
-      -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
+      ${ep_common_cache_args}
       ${CMAKE_PROJECT_INCLUDE_EXTERNAL_PROJECT_ARG}
-      -DBUILD_TESTING:BOOL=OFF
       -DBUILD_SHARED_LIBS:BOOL=ON
       -DOpenIGTLink_PROTOCOL_VERSION_2:BOOL=ON
     INSTALL_COMMAND ""
@@ -46,6 +42,8 @@ if(NOT DEFINED OpenIGTLink_DIR AND NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_${proj})
     )
 
   set(OpenIGTLink_DIR ${CMAKE_BINARY_DIR}/OpenIGTLink-build)
+
+  ExternalProject_Install_CMake(${proj})
 
 else()
   ExternalProject_Add_Empty(${proj} DEPENDS ${${proj}_DEPENDENCIES})

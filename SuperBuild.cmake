@@ -60,6 +60,16 @@ endif()
 set(ep_common_c_flags "${CMAKE_C_FLAGS_INIT} ${ADDITIONAL_C_FLAGS}")
 set(ep_common_cxx_flags "${CMAKE_CXX_FLAGS_INIT} ${ADDITIONAL_CXX_FLAGS}")
 
+set(ep_common_cache_args
+  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+  -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
+  -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
+  -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
+  -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
+  -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+  -DBUILD_TESTING:BOOL=OFF
+  )
+
 #-----------------------------------------------------------------------------
 # Define list of additional options used to configure Slicer
 #------------------------------------------------------------------------------
@@ -332,10 +342,8 @@ ExternalProject_Add(${proj}
   DOWNLOAD_COMMAND ""
   UPDATE_COMMAND ""
   CMAKE_CACHE_ARGS
-    -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
-    -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
-    -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
-    -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
+    ${ep_common_cache_args}
+    -DBUILD_TESTING:BOOL=${BUILD_TESTING}
     -DADDITIONAL_C_FLAGS:STRING=${ADDITIONAL_C_FLAGS}
     -DADDITIONAL_CXX_FLAGS:STRING=${ADDITIONAL_CXX_FLAGS}
     -DSlicer_REQUIRED_C_FLAGS:STRING=${Slicer_REQUIRED_C_FLAGS}
@@ -364,6 +372,8 @@ ExternalProject_Add_Step(${proj} forcebuild
   DEPENDEES build
   ALWAYS 1
   )
+
+ExternalProject_Install_CMake(${proj})
 
 #-----------------------------------------------------------------------------
 # Slicer extensions

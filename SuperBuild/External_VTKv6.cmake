@@ -103,11 +103,7 @@ if((NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR) AND NOT ${CMAKE_PROJECT_N
     GIT_REPOSITORY "${git_protocol}://${${CMAKE_PROJECT_NAME}_${proj}_GIT_REPOSITORY}"
     GIT_TAG ${${CMAKE_PROJECT_NAME}_${proj}_GIT_TAG}
     CMAKE_CACHE_ARGS
-      -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
-      -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
-      -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
-      -DCMAKE_C_FLAGS:STRING=${ep_common_c_flags}
-      -DBUILD_TESTING:BOOL=OFF
+      ${ep_common_cache_args}
       -DBUILD_EXAMPLES:BOOL=OFF
       -DBUILD_SHARED_LIBS:BOOL=ON
       -DVTK_USE_PARALLEL:BOOL=ON
@@ -145,6 +141,8 @@ if((NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR) AND NOT ${CMAKE_PROJECT_N
 #  else()
 #    set(PNG_LIBRARY ${PNG_LIBRARY_DIR}/libvtkpng-6.0.so)
 #  endif()
+
+  ExternalProject_Install_CMake(${proj})
 
 else()
   ExternalProject_Add_Empty(${proj} DEPENDS ${${proj}_DEPENDENCIES})
