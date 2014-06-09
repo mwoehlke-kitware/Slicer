@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import hashlib
 import os
 import sys
 
@@ -22,8 +23,19 @@ def writeFile(path, content):
 
 #-----------------------------------------------------------------------------
 def addFile(path):
+  out = []
+
+  try:
+    with open(path, "rb") as f:
+      out.append("    <!-- %s -->" % hashlib.sha256(f.read()).hexdigest())
+
+  except:
+    pass
+
   name = os.path.basename(path)
-  return ["    <file alias=\"%s\">%s</file>" % (name, path)]
+  out.append("    <file alias=\"%s\">%s</file>" % (name, path))
+
+  return out
 
 #-----------------------------------------------------------------------------
 def buildContent(root, path):

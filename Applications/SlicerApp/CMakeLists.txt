@@ -51,9 +51,14 @@ set(SlicerApp_UI_SRCS
   Resources/UI/qSlicerAppMainWindow.ui
   )
 
+set_source_files_properties(
+  ${qSlicerBaseQTGUI_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc
+  PROPERTIES GENERATED TRUE
+  )
+
 set(SlicerApp_RESOURCES
   Resources/SlicerApp.qrc
-  ${qSlicerBaseQTGUI_SOURCE_DIR}/Resources/qSlicerBaseQTGUI.qrc
+  ${qSlicerBaseQTGUI_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc
   ${qSlicerModulesCore_SOURCE_DIR}/Resources/qSlicerModulesCore.qrc
   )
 

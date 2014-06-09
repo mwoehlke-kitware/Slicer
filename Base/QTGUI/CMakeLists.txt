@@ -289,9 +289,46 @@ if(Slicer_USE_PYTHONQT)
     )
 endif()
 
+# Generate resource .qrc file
+if(CMAKE_GENERATOR MATCHES "Ninja")
+  # Ninja won't rebuild downstream dependencies if the output file doesn't
+  # change, but does need to have a non-existing output file to ensure that the
+  # edge is always dirty
+  add_custom_command(
+    OUTPUT
+      ${CMAKE_CURRENT_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc
+      ${CMAKE_CURRENT_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc.phony
+    COMMAND ${PYTHON_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/genqrc.py
+      -o ${CMAKE_CURRENT_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc
+      ${CMAKE_CURRENT_SOURCE_DIR}/Resources/Icons
+    )
+else()
+  # Make needs to instead use a custom target that always runs
+  add_custom_target(${PROJECT_NAME}-genqrc
+    COMMAND ${PYTHON_EXECUTABLE}
+      ${CMAKE_CURRENT_SOURCE_DIR}/genqrc.py
+      -o ${CMAKE_CURRENT_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc
+      ${CMAKE_CURRENT_SOURCE_DIR}/Resources/Icons
+    )
+  set_source_files_properties(
+    ${CMAKE_CURRENT_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc
+    PROPERTIES GENERATED TRUE
+    )
+endif()
+
+# Remove old .qrc file to prevent CMake (qt4_add_resources) from knowing about
+# its contents; we don't need to do this during a build (it will be rewritten
+# as needed), but because the file is generated, CMake is seeing an old copy
+# that might refer to files that don't exist, and will result in impossible
+# build dependencies
+if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc)
+  file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc)
+endif()
+
 # Resources
 set(KIT_resources
-  Resources/qSlicerBaseQTGUI.qrc
+  ${CMAKE_CURRENT_BINARY_DIR}/Resources/qSlicerBaseQTGUI.qrc
   ${qMRMLWidgets_SOURCE_DIR}/Resources/qMRMLWidgets.qrc
   )
 
@@ -322,6 +359,10 @@ SlicerMacroBuildBaseQtLibrary(
   RESOURCES ${KIT_resources}
   WRAP_PYTHONQT
   )
+
+if(NOT CMAKE_GENERATOR MATCHES "Ninja")
+  add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}-genqrc)
+endif()
 
 #-----------------------------------------------------------------------------
 # Slicer icon engine
