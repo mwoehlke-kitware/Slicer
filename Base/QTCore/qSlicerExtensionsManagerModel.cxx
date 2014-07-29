@@ -1413,6 +1413,7 @@ void qSlicerExtensionsManagerModel::checkForUpdates(bool installUpdates)
       }
 
     // Issue the query
+    qDebug() << "checking for" << extensionName << "updates:" << parameters;
     const QUuid& requestId =
       d->CheckForUpdatesApi.get("midas.slicerpackages.extension.list",
                                 parameters);
@@ -1465,6 +1466,10 @@ void qSlicerExtensionsManagerModel::onUpdateCheckComplete(
       extensionMetadata.value("extension_id").toString();
     const QString& extensionRevision =
       extensionMetadata.value("revision").toString();
+
+    qDebug() << "update check for" << updateInfo.ExtensionName << "complete:"
+             << extensionRevision << "available,"
+             << updateInfo.InstalledVersion << "installed";
 
     // Check if update is available
     if (!extensionRevision.isEmpty() &&
@@ -1655,6 +1660,7 @@ bool qSlicerExtensionsManagerModel::scheduleExtensionForUpdate(
   scheduled[extensionName] = updateInfo.ArchiveName;
   settings.setValue("Extensions/ScheduledForUpdate", scheduled);
 
+  qDebug() << extensionName << "scheduled for update";
   emit this->extensionScheduledForUpdate(extensionName);
 
   return true;
